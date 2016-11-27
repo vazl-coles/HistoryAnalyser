@@ -10,8 +10,8 @@ import java.io.IOException;
 
 public class HistoryAnalyser {
 	
-	static String csvFile = "d:\\temp\\analysing historical data\\spy_yahoo.csv";
-	static String csvFileOut = "d:\\temp\\analysing historical data\\spyNew.csv";
+	static String csvFile = "c:\\Java Projects\\Historical Data\\spy_yahoo.csv";
+	static String csvFileOut = "c:\\Java Projects\\Historical Data\\spyNew.csv";
 	static List<DailyActivity> days = new ArrayList<DailyActivity>();
 
     public static void main(String[] args) throws Exception {
