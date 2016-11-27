@@ -19,6 +19,9 @@ public class HistoryAnalyser {
     	readPriceHistory();
         Collections.sort(days );
         addIndicators();
+        
+        // Make predictions based on history
+        Predictor.makePrediction(days.size()-1);
 
     }
     
