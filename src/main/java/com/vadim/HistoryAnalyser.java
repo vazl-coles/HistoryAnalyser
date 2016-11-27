@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class HistoryAnalyser {
 	
-	static String csvFile = "c:\\Java Projects\\Historical Data\\spy_yahoo.csv";
+	static String csvFile = "c:\\Java Projects\\Historical Data\\spy history.csv";
 	static String csvFileOut = "c:\\Java Projects\\Historical Data\\spyNew.csv";
 	static List<DailyActivity> days = new ArrayList<DailyActivity>();
 
@@ -33,6 +33,16 @@ public class HistoryAnalyser {
             reader = new CSVReader(new FileReader(csvFile));
             String[] line;
             while ((line = reader.readNext()) != null) {
+            	if (line[0].contains("/") || line[0].contains("Date"))
+            	{
+            		// System.out.println("date= " + line[0] );
+            	}
+            	else
+            	{
+            		System.out.println("date= " + line[0] );
+            		System.out.println("Method returns : " + line[0].contains("Date"));
+            		break;
+            	}
             	/*
                 System.out.println("date= " + line[0] 
                 		+ ", open= " + line[1] 
@@ -40,10 +50,11 @@ public class HistoryAnalyser {
                 		+" , low= " + line[3]
                 		+" , close= " + line[4]
                 		+" , volume= " + line[5]);
-				*/
-            	if (line[1].contains("Open") || line[5].equals("0"))
+                		*/
+				
+            	if (line[1].contains("Open") || line[5].equals("0") || line[0].contains("Date"))
             	{
-            		
+            		// System.out.println("Invalid field, date= " + line[0] );
             	}
             	else
             	{

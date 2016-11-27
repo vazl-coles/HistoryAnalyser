@@ -20,3 +20,11 @@ remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
 To https://github.com/vazl/HistoryAnalyser.git
    72b0842..0620463  master -> master
 D:\Java Projects\HistoryAnalyser [master ≡ +5 ~5 -3 !]>
+
+Input files:
+
+spy history.xltm
+and
+vix history.xltm
+
+These files were created to automate the process of downloading data. They are used to save information in csv format.
