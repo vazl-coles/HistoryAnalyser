@@ -11,6 +11,7 @@ import java.io.IOException;
 public class HistoryAnalyser {
 	
 	static String csvFile = "c:\\Java Projects\\Historical Data\\spy history.csv";
+	static String csvFileVIX = "c:\\Java Projects\\Historical Data\\vix history.csv";
 	static String csvFileOut = "c:\\Java Projects\\Historical Data\\spyNew.csv";
 	static List<DailyActivity> days = new ArrayList<DailyActivity>();
 
@@ -29,10 +30,19 @@ public class HistoryAnalyser {
     {
     	
         CSVReader reader = null;
+        CSVReader readerVIX = null;
         try {
             reader = new CSVReader(new FileReader(csvFile));
+            readerVIX = new CSVReader(new FileReader(csvFileVIX));
             String[] line;
+            String[] lineVIX;
+            
             while ((line = reader.readNext()) != null) {
+            	if ((lineVIX = readerVIX.readNext()) != null)
+            	{
+            		
+            	}
+            	
             	if (line[0].contains("/") || line[0].contains("Date"))
             	{
             		// System.out.println("date= " + line[0] );
@@ -58,8 +68,25 @@ public class HistoryAnalyser {
             	}
             	else
             	{
-            		DailyActivity day = new DailyActivity(line[0], line[1], line[2], line[3], line[4], line[5]);
-            		days.add(day);
+            		if (line[0].equals(lineVIX[0]))
+            		{
+            			System.out.println("date= " + line[0] + " vix date " + lineVIX[0]);
+            			DailyActivity day = new DailyActivity(line[0], line[1], line[2], line[3], line[4], line[5], lineVIX[4]);
+            			days.add(day);
+            		}
+            		else
+            		{
+            			System.out.println("Different dates, stock date= " + line[0] + " vix date " + lineVIX[0]);
+            			/*
+            			try {
+							Thread.sleep(4000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						*/
+            			break;
+            		}
             	}
                 
             }

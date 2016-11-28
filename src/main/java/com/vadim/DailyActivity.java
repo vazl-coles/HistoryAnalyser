@@ -17,10 +17,11 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	private float low;
 	private float close;
 	private float volume;
+	private float vix;
 	private float weeklyMA50;
 
 	
-	public DailyActivity(String date, String open, String high, String low, String close, String volume)
+	public DailyActivity(String date, String open, String high, String low, String close, String volume, String vix)
 	{
 		setDate(date);
 		setOpen(open);
@@ -28,6 +29,7 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 		setLow(low);
 		setClose(close);
 		setVolume(volume);
+		setVIX(vix);
 	}
 	
 	public DailyActivity()
@@ -172,6 +174,21 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	public float getVolume()
 	{
 		return this.volume;
+	}
+	
+	public void setVIX(String vix)
+	{
+		this.vix = Float.parseFloat(vix);
+	}
+	
+	public String getStringVIX()
+	{
+		return String.valueOf(this.vix);
+	}
+	
+	public float getVIX()
+	{
+		return this.vix;
 	}
 	
 	public void setWeeklyMA50(float weeklyMA50)
