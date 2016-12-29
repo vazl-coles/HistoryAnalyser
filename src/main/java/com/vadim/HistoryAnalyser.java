@@ -4,9 +4,10 @@ import java.util.*;
 
 import com.opencsv.CSVReader;
 import java.io.FileWriter;
-
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class HistoryAnalyser {
 	
@@ -14,16 +15,45 @@ public class HistoryAnalyser {
 	static String csvFileVIX = "c:\\Java Projects\\Historical Data\\vix history.csv";
 	static String csvFileOut = "c:\\Java Projects\\Historical Data\\spyNew.csv";
 	static List<DailyActivity> days = new ArrayList<DailyActivity>();
+	
+	static Properties prop = new Properties();
+	static int numberOfWeeks=50;
 
     public static void main(String[] args) throws Exception {
        
+    	readProperties();
+    	init();
+    	
     	readPriceHistory();
         Collections.sort(days );
         addIndicators();
         
         // Make predictions based on history
         Predictor.makePrediction(days.size()-1);
+        Predictor.performHistoricalProfitabilityAnalysis(days.size()-1);
 
+    }
+    
+    public static void readProperties()
+    {
+		  InputStream input = null;
+
+		  try
+		  {
+			  input = new FileInputStream("config.properties");
+			  prop.load(input);
+			  csvFileOut = prop.getProperty("csvFileOut");
+		  }
+		  catch (IOException ex) 
+		  {
+			  ex.printStackTrace();
+	      }
+    }
+    
+    public static void init()
+    {
+		csvFile = prop.getProperty("csvFile");
+		csvFileVIX = prop.getProperty("csvFileVIX");
     }
     
     public static void readPriceHistory()
@@ -31,6 +61,7 @@ public class HistoryAnalyser {
     	
         CSVReader reader = null;
         CSVReader readerVIX = null;
+                
         try {
             reader = new CSVReader(new FileReader(csvFile));
             readerVIX = new CSVReader(new FileReader(csvFileVIX));
@@ -70,7 +101,7 @@ public class HistoryAnalyser {
             	{
             		if (line[0].equals(lineVIX[0]))
             		{
-            			System.out.println("date= " + line[0] + " vix date " + lineVIX[0]);
+            			//System.out.println("date= " + line[0] + " vix date " + lineVIX[0]);
             			DailyActivity day = new DailyActivity(line[0], line[1], line[2], line[3], line[4], line[5], lineVIX[4]);
             			days.add(day);
             		}
@@ -103,7 +134,7 @@ public class HistoryAnalyser {
     	try
     	{
     	        int weekNumber=0;
-    	        float weeklyMA50;
+    	        float weeklyMA;
     	        
     	        for (int i=0;i<days.size();i++)
     	        {
@@ -128,8 +159,8 @@ public class HistoryAnalyser {
     	        	days.get(i).setWeekNumber(weekNumber);
     	        	//if (weekNumber > 825)
     	        		//System.out.println("Test=(i)" + HistoryAnalyser.days.get(i).getWeekNumber() + " "+i+" Size =" + HistoryAnalyser.days.size());
-    	        	weeklyMA50 = MAcalculator.calculateMA("Weekly", "Close", 50, weekNumber);
-    	        	days.get(i).setWeeklyMA50(weeklyMA50);
+    	        	weeklyMA = MAcalculator.calculateMA("Weekly", "Close", numberOfWeeks, weekNumber);
+    	        	days.get(i).setWeeklyMA(weeklyMA);
     	        	
     	        	
     	            System.out.println("date= " + days.get(i).getStringDate()
@@ -140,7 +171,7 @@ public class HistoryAnalyser {
     	            		+" , low= " + days.get(i).getLow()
     	            		+" , close= " + days.get(i).getClose()
     	            		+" , volume= " + days.get(i).getVolume()
-    	            		+" , weekly MA50 = " + days.get(i).getWeeklyMA50());
+    	            		+" , weekly MA = " + days.get(i).getWeeklyMA());
     	            
     	            CSVUtils.writeLine(writer, Arrays.asList(
     	            		days.get(i).getStringDate(),
@@ -151,13 +182,14 @@ public class HistoryAnalyser {
     	            		days.get(i).getStringLow(),
     	            		days.get(i).getStringClose(),
     	            		days.get(i).getStringVolume(),
-    	            		days.get(i).getStringWeeklyMA50()
+    	            		days.get(i).getStringWeeklyMA()
     	            		));
     	            		
     	            		
     	        }
 
 
+    	        System.out.println("Finished writing to: " + csvFileOut);
     	        writer.flush();
     	        writer.close();
 

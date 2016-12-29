@@ -18,7 +18,7 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	private float close;
 	private float volume;
 	private float vix;
-	private float weeklyMA50;
+	private float weeklyMA;
 
 	
 	public DailyActivity(String date, String open, String high, String low, String close, String volume, String vix)
@@ -39,17 +39,17 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	
 	public void setDate(String date)
 	{
-		SimpleDateFormat ft = new SimpleDateFormat ("dd/mm/yyyy", Locale.ENGLISH);
+		SimpleDateFormat ft = new SimpleDateFormat ("dd/MM/yyyy", Locale.US);
         try {
              this.date = ft.parse(date);
-             DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH);
+             DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
              this.stringDate = dateFormat.format(this.date);
              this.dateForSort = this.date.getTime();
         }catch (ParseException e) {
              System.out.println("Unparseable (" + date + ")using " + ft);
         }
         
-        DateFormat format2=new SimpleDateFormat("EEEE", Locale.ENGLISH); 
+        DateFormat format2=new SimpleDateFormat("EEEE", Locale.US); 
         this.dayOfWeek=format2.format(this.date);
         //System.out.println("Day="+this.dayOfWeek);
 	}
@@ -71,7 +71,7 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	
 	public String getStringDate()
 	{
-        DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
         
         //to convert Date to String, use format method of SimpleDateFormat class.
         String strDate = dateFormat.format(this.date);
@@ -191,19 +191,19 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 		return this.vix;
 	}
 	
-	public void setWeeklyMA50(float weeklyMA50)
+	public void setWeeklyMA(float weeklyMA)
 	{
-		this.weeklyMA50 = weeklyMA50;
+		this.weeklyMA = weeklyMA;
 	}
 	
-	public String getStringWeeklyMA50()
+	public String getStringWeeklyMA()
 	{
-		return String.valueOf(this.weeklyMA50);
+		return String.valueOf(this.weeklyMA);
 	}
 	
-	public float getWeeklyMA50()
+	public float getWeeklyMA()
 	{
-		return this.weeklyMA50;
+		return this.weeklyMA;
 	}
 	
 	// Overriding the compare method to sort by date 

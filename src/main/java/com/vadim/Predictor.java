@@ -1,6 +1,128 @@
 package com.vadim;
 
+import java.util.ArrayList;
+
+class PredictorOutput
+{
+	HistoricalTradeResult historicalTradeResult;
+	float strikePrice;
+	int numberOfDaysBeforeExpiry;
+	
+	public PredictorOutput(float strikePrice, int  numberOfDaysBeforeExpiry, HistoricalTradeResult historicalTradeResult)
+	{
+		this.strikePrice = strikePrice;
+		this.numberOfDaysBeforeExpiry = numberOfDaysBeforeExpiry;
+		this.historicalTradeResult = historicalTradeResult;
+	}
+}
+
 public class Predictor {
+	static ArrayList<PredictorOutput> predictorOutputArrayList = new ArrayList<PredictorOutput>(); 
+	// Go through history and check how profitable is the trade
+	public static void performHistoricalProfitabilityAnalysis(int dayNumber)
+	{
+		float startOfRange = HistoryAnalyser.days.get(dayNumber).getClose() * 99 / 100;
+		int numberOfDaysBeforeExpiry;
+		int i=0;
+		
+		startOfRange = Math.round(startOfRange);
+		float strikePrice = startOfRange; // strike price will typically look like 220, 220.5, 221, etc
+		while (strikePrice < HistoryAnalyser.days.get(dayNumber).getClose() * 101 /100 )
+		{
+			numberOfDaysBeforeExpiry = 1;
+			while (numberOfDaysBeforeExpiry < 5)
+			{
+				//HistoricalTradeResult result = calculate(dayNumber, HistoryAnalyser.days.get(dayNumber).getClose(), strikePrice, numberOfDaysBeforeExpiry);
+				//System.out.println("Average profit=" + result.getAverageProfit());
+
+				//numberOfDaysBeforeExpiry++;
+				
+				//System.out.println("Strike price= " + strikePrice + " Number of Days before expiry=" + numberOfDaysBeforeExpiry);
+				//System.out.println("Day Number= " + dayNumber + " Close price=" + HistoryAnalyser.days.get(dayNumber).getClose());
+				predictorOutputArrayList.add(
+						new PredictorOutput( strikePrice, numberOfDaysBeforeExpiry++,
+								calculate(dayNumber, 
+										HistoryAnalyser.days.get(dayNumber).getClose(), 
+										strikePrice, 
+										numberOfDaysBeforeExpiry))
+						);
+																							
+			}
+			strikePrice = strikePrice + (float)0.5;
+			
+		}
+		
+		int last = predictorOutputArrayList.size();
+		for (i=0; i < last; i++)
+		{
+			System.out.println("Strike price=" + predictorOutputArrayList.get(i).strikePrice +
+					           " Number of days before expiry="+ predictorOutputArrayList.get(i).numberOfDaysBeforeExpiry+
+					           " Profit=" + predictorOutputArrayList.get(i).historicalTradeResult.getAverageProfit());
+			
+		}
+		
+	}
+	
+	private static HistoricalTradeResult calculate(int dayNumber, float currentPrice, float strikePrice, int numberOfDaysBeforeExpiry )
+	{
+		HistoricalTradeResult result = new HistoricalTradeResult();
+		float straddlePrice, priceAtExpiry, roughStrikePrice;
+		// Scan through history and populate the result object
+		//System.out.println("Scan through history and populate the result object ");
+		for (int i = 0; i <= dayNumber; i++)
+		{
+			straddlePrice = StraddlePriceCalculator.getStraddlePrice(currentPrice, strikePrice, numberOfDaysBeforeExpiry);
+			if ((i+numberOfDaysBeforeExpiry) < dayNumber)
+			{
+				//System.out.println("Calculate profit at "+ HistoryAnalyser.days.get(i).getStringDate());
+				priceAtExpiry = HistoryAnalyser.days.get(i+numberOfDaysBeforeExpiry).getClose();
+				// strikePrice should be calculated relative to the time in history. At the moment it contains todays strike price
+				roughStrikePrice = strikePrice/currentPrice*HistoryAnalyser.days.get(i).getClose();
+				/*
+				if ( strikePrice < currentPrice*0.995)
+					System.out.println("Historical close=" + HistoryAnalyser.days.get(i).getClose() + 
+									" Rough strike price=" + roughStrikePrice);
+				*/
+				/*
+				if (Math.abs(HistoryAnalyser.days.get(i).getClose()-priceAtExpiry) > 5)
+				{
+					System.out.println("Powerful move after "+ HistoryAnalyser.days.get(i).getStringDate());
+					System.out.println("Prices: "+ HistoryAnalyser.days.get(i).getClose() + 
+							";" + priceAtExpiry + 
+							";" + result.getTotalProfit() + 
+							";" + roughStrikePrice);
+					System.out.println("Straddle price:"+straddlePrice);
+				}
+				else if (Math.abs(HistoryAnalyser.days.get(i).getClose()-priceAtExpiry) < 1)
+				{
+					System.out.println("Weak move after "+ HistoryAnalyser.days.get(i).getStringDate());
+					System.out.println("Prices: "+ HistoryAnalyser.days.get(i).getClose() + 
+							";" + priceAtExpiry + 
+							";" + result.getTotalProfit() + 
+							";" + roughStrikePrice);
+					System.out.println("Straddle price:"+straddlePrice);
+				}
+				else
+				{
+				}
+				*/
+
+				result.calculateProfit(straddlePrice, priceAtExpiry, roughStrikePrice);
+				
+				/*
+				if (Math.abs(HistoryAnalyser.days.get(i).getClose()-priceAtExpiry) < 1)
+				{
+					System.out.println("Profit: "+ HistoryAnalyser.days.get(i).getClose() + ";" + priceAtExpiry + ";" + result.getTotalProfit());
+				}
+				*/
+					
+			}
+		}
+		// System.out.println("calculate Average profit=" + result.getAverageProfit());
+		return result;
+	}
+	
+	
 	// Go through history and make prediction what the value will be at expiry
 	
 	public static void makePrediction(int dayNumber)
@@ -14,7 +136,7 @@ public class Predictor {
 		
 		if (dayNumber > 0)
 		{
-			risingMarket = (HistoryAnalyser.days.get(dayNumber).getWeeklyMA50() > HistoryAnalyser.days.get(dayNumber-1).getWeeklyMA50());
+			risingMarket = (HistoryAnalyser.days.get(dayNumber).getWeeklyMA() > HistoryAnalyser.days.get(dayNumber-1).getWeeklyMA());
 			
 			/*
 			System.out.println("Rising market = " + risingMarket + "  date =" + HistoryAnalyser.days.get(dayNumber).getStringDate());
@@ -76,7 +198,7 @@ public class Predictor {
 			}
 			else
 			{
-				if (HistoryAnalyser.days.get(i).getWeeklyMA50() == 0)
+				if (HistoryAnalyser.days.get(i).getWeeklyMA() == 0)
 				{
 					/*
 					System.out.println("ma50 is 0,Ignoring date = " + HistoryAnalyser.days.get(i).getStringDate());
@@ -93,7 +215,7 @@ public class Predictor {
 				if (risingMarket)
 				{
 					// Do not look at this day as this was in falling market
-					if (HistoryAnalyser.days.get(i+1).getWeeklyMA50() < HistoryAnalyser.days.get(i).getWeeklyMA50())
+					if (HistoryAnalyser.days.get(i+1).getWeeklyMA() < HistoryAnalyser.days.get(i).getWeeklyMA())
 					{
 						continue;
 					}
@@ -101,7 +223,7 @@ public class Predictor {
 				else
 				{
 					// Do not look at this day as this was in rising market
-					if (HistoryAnalyser.days.get(i+1).getWeeklyMA50() > HistoryAnalyser.days.get(i).getWeeklyMA50())
+					if (HistoryAnalyser.days.get(i+1).getWeeklyMA() > HistoryAnalyser.days.get(i).getWeeklyMA())
 						continue;
 				}
 				
@@ -153,13 +275,13 @@ public class Predictor {
 				if (risingMarket)
 				{
 					// Do not look at this day as this was in falling market
-					if (HistoryAnalyser.days.get(i+1).getWeeklyMA50() < HistoryAnalyser.days.get(i).getWeeklyMA50())
+					if (HistoryAnalyser.days.get(i+1).getWeeklyMA() < HistoryAnalyser.days.get(i).getWeeklyMA())
 						continue;
 				}
 				else
 				{
 					// Do not look at this day as this was in rising market
-					if (HistoryAnalyser.days.get(i+1).getWeeklyMA50() > HistoryAnalyser.days.get(i).getWeeklyMA50())
+					if (HistoryAnalyser.days.get(i+1).getWeeklyMA() > HistoryAnalyser.days.get(i).getWeeklyMA())
 						continue;
 				}
 				//System.out.println("Comparing " + HistoryAnalyser.days.get(i+1).getClose() + " with " + HistoryAnalyser.days.get(i).getClose()*percentageFromClose);

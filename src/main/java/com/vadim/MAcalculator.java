@@ -25,7 +25,11 @@ public class MAcalculator {
 	{
 		int i=0;
 		float total=0;
+		boolean debug=false;
+		float average;
 		
+		if (numOfEntries < 5) // If moving average is based on the number of entries which is less than 5 
+			debug = true;     // we can assume that this is called as part of unit test  
 		if (typeOfMA.equals("Weekly"))
 		{
 			i = HistoryAnalyser.days.size() - 1;// Last entry in the list
@@ -40,6 +44,8 @@ public class MAcalculator {
 			
 			int lastWeek = HistoryAnalyser.days.get(i).getWeekNumber();
 			int firstWeek = lastWeek - numOfEntries+1;
+			//if (debug)
+				//System.out.println("Last week=" + lastWeek + " First week=" + firstWeek); 
 			int alreadyProcessedWeek = HistoryAnalyser.days.get(i).getWeekNumber()+1;
 			//System.out.println("Last week=" + lastWeek + " First week=" + firstWeek + " Last entry= " + lastEntry + " Size= " + HistoryAnalyser.days.size() );
 			while (alreadyProcessedWeek > firstWeek && i > 0)
@@ -50,6 +56,8 @@ public class MAcalculator {
 				}
 				else
 				{
+					//if (debug)
+						//System.out.println("Week number=" + HistoryAnalyser.days.get(i).getWeekNumber() + " Close=" + HistoryAnalyser.days.get(i).getClose());
 					total = total + HistoryAnalyser.days.get(i).getClose();
 					//if (lastWeek > 825)
 						//System.out.println("total = " + total + " Close = " + HistoryAnalyser.getClose(i) + " Week= " + HistoryAnalyser.days.get(i).getWeekNumber());
@@ -58,7 +66,10 @@ public class MAcalculator {
 				i = i - 1;
 			}
 		}
-		return total/numOfEntries;
+		average = total/numOfEntries;
+		if (debug)
+			System.out.println("Moving average=" + average);
+		return average;
 		
 	}
 
