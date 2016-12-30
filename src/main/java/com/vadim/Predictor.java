@@ -23,6 +23,7 @@ public class Predictor {
 	{
 		float startOfRange = HistoryAnalyser.days.get(dayNumber).getClose() * 99 / 100;
 		int numberOfDaysBeforeExpiry;
+		float vix;
 		int i=0;
 		
 		startOfRange = Math.round(startOfRange);
@@ -39,12 +40,14 @@ public class Predictor {
 				
 				//System.out.println("Strike price= " + strikePrice + " Number of Days before expiry=" + numberOfDaysBeforeExpiry);
 				//System.out.println("Day Number= " + dayNumber + " Close price=" + HistoryAnalyser.days.get(dayNumber).getClose());
+				vix = HistoryAnalyser.days.get(dayNumber).getVIX();
 				predictorOutputArrayList.add(
 						new PredictorOutput( strikePrice, numberOfDaysBeforeExpiry++,
 								calculate(dayNumber, 
 										HistoryAnalyser.days.get(dayNumber).getClose(), 
 										strikePrice, 
-										numberOfDaysBeforeExpiry))
+										numberOfDaysBeforeExpiry,
+										vix))
 						);
 																							
 			}
@@ -63,7 +66,7 @@ public class Predictor {
 		
 	}
 	
-	private static HistoricalTradeResult calculate(int dayNumber, float currentPrice, float strikePrice, int numberOfDaysBeforeExpiry )
+	private static HistoricalTradeResult calculate(int dayNumber, float currentPrice, float strikePrice, int numberOfDaysBeforeExpiry, float vix )
 	{
 		HistoricalTradeResult result = new HistoricalTradeResult();
 		float straddlePrice, priceAtExpiry, roughStrikePrice;
@@ -71,7 +74,7 @@ public class Predictor {
 		//System.out.println("Scan through history and populate the result object ");
 		for (int i = 0; i <= dayNumber; i++)
 		{
-			straddlePrice = StraddlePriceCalculator.getStraddlePrice(currentPrice, strikePrice, numberOfDaysBeforeExpiry);
+			straddlePrice = StraddlePriceCalculator.getStraddlePrice(currentPrice, strikePrice, numberOfDaysBeforeExpiry, vix);
 			if ((i+numberOfDaysBeforeExpiry) < dayNumber)
 			{
 				//System.out.println("Calculate profit at "+ HistoryAnalyser.days.get(i).getStringDate());
