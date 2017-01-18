@@ -2,9 +2,14 @@ package com.vadim;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import org.junit.Test;
 
 public class StraddlePriceCalculatorTest {
+	
 	
 	  @Test
 	  public void testGetStraddlePrice() {
@@ -28,5 +33,27 @@ public class StraddlePriceCalculatorTest {
 			
 			assertEquals(1.9, (Math.round(straddlePrice*100.0)/100.0),0);
 	  }
+	  
+	  @Test
+	  public void testReadingPropertiesFile() {
+		  Properties prop = new Properties();
+		  InputStream input = null;
+		  String testFileName="";
+		  String fileName="";
+
+		  try
+		  {
+			  String filename = "config.properties";
+			  prop.load(getClass().getClassLoader().getResourceAsStream("config.properties"));
+			  testFileName = prop.getProperty("straddlePrices");
+		  }
+		  catch (IOException ex) 
+		  {
+			  ex.printStackTrace();
+	      }
+		  
+		  assertEquals(testFileName, "straddlePrices.csv");
+	  }
+	  
 
 }
