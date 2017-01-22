@@ -1,6 +1,11 @@
 package com.vadim;
 
 import java.util.*;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.RollingFileAppender;
 
 import com.opencsv.CSVReader;
 import java.io.FileWriter;
@@ -18,11 +23,19 @@ public class HistoryAnalyser {
 	
 	static Properties prop = new Properties();
 	static int numberOfWeeks=50;
+	
+	//private static Logger log;
+	static final Logger log = Logger.getLogger("HistoryAnalyser");
 
     public static void main(String[] args) throws Exception {
        
     	readProperties();
     	init();
+    	
+    	PropertyConfigurator.configure("log4j.properties");
+    	
+        log.info("Reading history");
+        log.debug("test");
     	
     	readPriceHistory();
         Collections.sort(days );

@@ -1,6 +1,11 @@
 package com.vadim;
 
 import java.util.ArrayList;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.RollingFileAppender;
 
 class PredictorOutput
 {
@@ -127,9 +132,11 @@ public class Predictor {
 	
 	
 	// Go through history and make prediction what the value will be at expiry
+	static final Logger log = Logger.getLogger("predictor");
 	
 	public static void makePrediction(int dayNumber)
 	{
+		PropertyConfigurator.configure("log4j.properties");
 		// Check for tomorrow
 		float closeMinus2Percent = HistoryAnalyser.days.get(dayNumber).getClose() * 98 /100;
 		float closePlus2Percent = HistoryAnalyser.days.get(dayNumber).getClose() * 102 /100;
@@ -181,11 +188,11 @@ public class Predictor {
 		float percentageFromClose=0;
 		if (c < HistoryAnalyser.days.get(dayNumber).getClose())
 		{
-			System.out.println("Below close " + c);
+			log.info("Below close " + c);
 		}
 		else
 		{
-			System.out.println("Above close " + c);
+			log.info("Above close " + c);
 		}
 		percentageFromClose = c/HistoryAnalyser.days.get(dayNumber).getClose();
 		
@@ -196,7 +203,7 @@ public class Predictor {
 		{
 			if (percentageFromClose < 0.9 && percentageFromClose > 1.1)
 			{
-				System.out.println("Invalid percentage "+ percentageFromClose);
+				log.info("Invalid percentage "+ percentageFromClose);
 				return;
 			}
 			else
@@ -244,8 +251,8 @@ public class Predictor {
 			
 		}
 		
-		System.out.println("Above = " + totalAbove + " Below = " + totalBelow);
-		System.out.println("Probability = " + (float)totalBelow/(totalAbove+totalBelow)*100);
+		log.info("Above = " + totalAbove + " Below = " + totalBelow);
+		log.info("Probability = " + (float)totalBelow/(totalAbove+totalBelow)*100);
 		
 	}
 	
@@ -255,11 +262,11 @@ public class Predictor {
 		float percentageFromClose=0;
 		if (c < HistoryAnalyser.days.get(dayNumber).getClose())
 		{
-			System.out.println("Below close " + c);
+			log.info("Below close " + c);
 		}
 		else
 		{
-			System.out.println("Above close " + c);
+			log.info("Above close " + c);
 		}
 		percentageFromClose = c/HistoryAnalyser.days.get(dayNumber).getClose();
 		
@@ -270,7 +277,7 @@ public class Predictor {
 		{
 			if (percentageFromClose < 0.9 && percentageFromClose > 1.1)
 			{
-				System.out.println("Invalid percentage "+ percentageFromClose);
+				log.info("Invalid percentage "+ percentageFromClose);
 				return;
 			}
 			else
@@ -301,8 +308,8 @@ public class Predictor {
 			
 		}
 		
-		System.out.println("Above = " + totalAbove + " Below = " + totalBelow);
-		System.out.println("Probability = " + (float)totalAbove/(totalAbove+totalBelow)*100);
+		log.info("Above = " + totalAbove + " Below = " + totalBelow);
+		log.info("Probability = " + (float)totalAbove/(totalAbove+totalBelow)*100);
 		
 	}
 
