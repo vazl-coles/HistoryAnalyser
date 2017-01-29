@@ -28,8 +28,7 @@ public class HistoryAnalyser {
 	static final Logger log = Logger.getLogger("HistoryAnalyser");
 
     public static void main(String[] args) throws Exception {
-       
-    	readProperties();
+
     	PropertyHelper.readProperties();
     	StraddlePriceCalculator.readStraddleFile();
     	init();
@@ -49,26 +48,12 @@ public class HistoryAnalyser {
 
     }
     
-    public static void readProperties()
-    {
-		  InputStream input = null;
-
-		  try
-		  {
-			  input = new FileInputStream("config.properties");
-			  prop.load(input);
-			  csvFileOut = prop.getProperty("csvFileOut");
-		  }
-		  catch (IOException ex) 
-		  {
-			  ex.printStackTrace();
-	      }
-    }
     
     public static void init()
     {
-		csvFile = prop.getProperty("csvFile");
-		csvFileVIX = prop.getProperty("csvFileVIX");
+		csvFile = PropertyHelper.getProperty("csvFile");
+		csvFileVIX = PropertyHelper.getProperty("csvFileVIX");
+		csvFileOut = PropertyHelper.getProperty("csvFileOut");
     }
     
     public static void readPriceHistory()
