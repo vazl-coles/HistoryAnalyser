@@ -28,6 +28,7 @@ public class StraddlePriceCalculator
     	//System.out.println(args[0]);
     	//System.out.println(args[1]);
     	readProperties();
+    	PropertyHelper.readProperties();
     	readStraddleFile();
     	/*
     	float numberOfDaysBeforeExpiry=Float.parseFloat(args[0]);
@@ -39,6 +40,8 @@ public class StraddlePriceCalculator
     		addStraddle(args[1], args[2], args[3], args[4], args[5]);
     	else if (args[0].contains("GET"))
     		System.out.println( getStraddlePrice(Integer.parseInt(args[1]), Float.parseFloat(args[2]), Float.parseFloat(args[3]), Float.parseFloat(args[5]) ));
+    	else 
+    		System.out.println("The first argument should be either GET or ADD");
     		
     }
     
@@ -60,7 +63,14 @@ public class StraddlePriceCalculator
         {
         	//System.out.println("test " + numberOfDaysBeforeExpiry + straddles.get(i).getNumberOfDaysBeforeExpiry());
         	if (numberOfDaysBeforeExpiry == straddles.get(i).getNumberOfDaysBeforeExpiry())
+        	{
+        		//System.out.println("Found " + straddles.get(i).getNumberOfDaysBeforeExpiry());
         		return straddles.get(i).getStraddlePrice();
+        	}
+        	else
+        	{
+        		//System.out.println("Not Found "); 
+        	}
         		
         }
 
