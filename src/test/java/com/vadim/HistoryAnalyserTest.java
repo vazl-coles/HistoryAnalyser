@@ -105,6 +105,8 @@ public class HistoryAnalyserTest {
 		  HistoryAnalyser.readPriceHistory();
 	      Collections.sort(HistoryAnalyser.days );
 	      HistoryAnalyser.addIndicators();
+	      
+	      PropertyHelper.readProperties();
 	      Predictor.performHistoricalProfitabilityAnalysis(HistoryAnalyser.days.size()-1);
 
 

@@ -79,7 +79,7 @@ public class Predictor {
 		//System.out.println("Scan through history and populate the result object ");
 		for (int i = 0; i <= dayNumber; i++)
 		{
-			straddlePrice = StraddlePriceCalculator.getStraddlePrice(currentPrice, strikePrice, numberOfDaysBeforeExpiry, vix);
+			straddlePrice = StraddlePriceCalculator.getStraddlePrice(numberOfDaysBeforeExpiry, currentPrice, strikePrice, vix);
 			if ((i+numberOfDaysBeforeExpiry) < dayNumber)
 			{
 				//System.out.println("Calculate profit at "+ HistoryAnalyser.days.get(i).getStringDate());
