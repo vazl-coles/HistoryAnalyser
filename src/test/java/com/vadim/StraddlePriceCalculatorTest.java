@@ -29,6 +29,7 @@ public class StraddlePriceCalculatorTest {
 			float vix = 13;
 			
 			readProperties();
+			StraddlePriceCalculator.readStraddleFile();
 			/*
 			StraddlePriceCalculator.straddlePricesFile = getFileNameIncludingPath(prop.getProperty("straddlePrices"));
 			float straddlePrice=StraddlePriceCalculator.getStraddlePrice(numberOfDaysBeforeExpiry, currentPrice, strikePrice, vix);

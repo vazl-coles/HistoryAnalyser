@@ -28,6 +28,7 @@ public class StraddlePriceCalculator
     	//System.out.println(args[0]);
     	//System.out.println(args[1]);
     	readProperties();
+    	readStraddleFile();
     	/*
     	float numberOfDaysBeforeExpiry=Float.parseFloat(args[0]);
     	float currentPrice=Float.parseFloat(args[1]);
@@ -46,7 +47,7 @@ public class StraddlePriceCalculator
     								float expiryPrice,
     								float volatility) 
     {
-    	readStraddleFile();
+    	//readStraddleFile();
     	return estimateStraddlePrice(numberOfDaysBeforeExpiry, currentPrice, expiryPrice, volatility);
 		
 	}

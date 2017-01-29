@@ -30,6 +30,8 @@ public class HistoryAnalyser {
     public static void main(String[] args) throws Exception {
        
     	readProperties();
+    	PropertyHelper.readProperties();
+    	StraddlePriceCalculator.readStraddleFile();
     	init();
     	
     	PropertyConfigurator.configure("log4j.properties");
