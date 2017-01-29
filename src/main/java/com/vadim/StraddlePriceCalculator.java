@@ -25,9 +25,7 @@ public class StraddlePriceCalculator
 	
     public static void main(String[] args) throws Exception {
         
-    	//System.out.println(args[0]);
-    	//System.out.println(args[1]);
-    	readProperties();
+
     	PropertyHelper.readProperties();
     	readStraddleFile();
     	/*
@@ -77,23 +75,6 @@ public class StraddlePriceCalculator
         return 1;
 		
 	}
-
-	public static void readProperties()
-    {
-		  InputStream input = null;
-
-		  try
-		  {
-			  input = new FileInputStream("config.properties");
-			  prop.load(input);
-			  straddlePricesFileNew = prop.getProperty("straddlePricesNew");
-			  straddlePricesFile = prop.getProperty("straddlePrices");
-		  }
-		  catch (IOException ex) 
-		  {
-			  ex.printStackTrace();
-	      }
-    }
     
     public static void readStraddleFile()
     {
