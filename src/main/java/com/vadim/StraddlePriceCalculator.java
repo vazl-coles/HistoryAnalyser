@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -35,7 +36,12 @@ public class StraddlePriceCalculator
     	float volatility=Float.parseFloat(args[3]);
     	*/
     	if (args[0].contains("ADD"))
+    	{
     		addStraddle(args[1], args[2], args[3], args[4], args[5]);
+    		Collections.sort(straddles, StraddleInfo.StraddleInfoComparator);
+    		straddlePricesFileNew = PropertyHelper.getProperty("straddlePricesFileNew");
+    		writeStraddle();
+    	}
     	else if (args[0].contains("GET"))
     		System.out.println( getStraddlePrice(Integer.parseInt(args[1]), Float.parseFloat(args[2]), Float.parseFloat(args[3]), Float.parseFloat(args[5]) ));
     	else 
@@ -104,6 +110,29 @@ public class StraddlePriceCalculator
         }
     }
             
+    public static void writeStraddle() throws Exception
+    {
+    	FileWriter writer = new FileWriter(straddlePricesFileNew);
+    	
+    	try
+    	{
+    		for (int i=0;i<straddles.size();i++)
+    		{
+    			CSVUtils.writeLine(writer, Arrays.asList(
+    				straddles.get(i).getNumberOfDaysBeforeExpiryString(),
+    				straddles.get(i).getStringCurrentPrice(),
+    				straddles.get(i).getStringStrikePrice(),
+    				straddles.get(i).getStringStraddlePrice(),
+    				straddles.get(i).getStringVIX()
+            		));
+    		}
+	        writer.flush();
+	        writer.close();
+    	}
+    	catch (IOException e) {
+    		e.printStackTrace();
+    	}
+    }
     
     public static void addStraddle(String numberOfDaysBeforeExpiry, 
     		String currentPrice, 
@@ -111,23 +140,17 @@ public class StraddlePriceCalculator
     		String straddlePrice, 
     		String volatility) throws Exception
     {
-    	FileWriter writer = new FileWriter(straddlePricesFileNew);
+    	StraddleInfo straddle = new StraddleInfo(numberOfDaysBeforeExpiry, currentPrice, expiryPrice, straddlePrice, volatility);
     	
-    	try
-    	{
-    		CSVUtils.writeLine(writer, Arrays.asList(
-    				numberOfDaysBeforeExpiry,
-    				currentPrice,
-    				expiryPrice,
-    				straddlePrice,
-    				volatility
-            		));
-	        writer.flush();
-	        writer.close();
-    	}
-    	catch (IOException e) {
-    		e.printStackTrace();
-    	}
+    	/*
+    	System.out.println("number of days= " + line[0] 
+        		+ ", current= " + line[1] 
+        		+" , expiry= " + line[2] 
+        		+" , straddle= " + line[3]
+        		+" , vix= " + line[4]);
+        	*/	
+    	straddles.add(straddle);
+
     }
     
 

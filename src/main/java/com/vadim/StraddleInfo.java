@@ -1,6 +1,8 @@
 package com.vadim;
 
-public class StraddleInfo {
+import java.util.Comparator;
+
+public class StraddleInfo implements Comparable<StraddleInfo> {
 	
 	private int numberOfDaysBeforeExpiry;
 	private float currentPrice;
@@ -84,6 +86,14 @@ public class StraddleInfo {
 		return String.valueOf(this.numberOfDaysBeforeExpiry);
 	}
 	
+	public int compareTo(StraddleInfo straddle) {
+
+		int numberOfDaysBeforeExpiry = straddle.numberOfDaysBeforeExpiry;
+		
+		//ascending order
+		return this.numberOfDaysBeforeExpiry - numberOfDaysBeforeExpiry;
+	}
+	
 	public int compare(StraddleInfo s, StraddleInfo s1) 
 	{
 		if (s.numberOfDaysBeforeExpiry < s1.numberOfDaysBeforeExpiry)
@@ -107,5 +117,41 @@ public class StraddleInfo {
 		}
 
 	}
+	
+	public static Comparator<StraddleInfo> StraddleInfoComparator
+    = new Comparator<StraddleInfo>() {
+		
+		public int compare(StraddleInfo s, StraddleInfo s1) 
+		{
+			if (s.numberOfDaysBeforeExpiry < s1.numberOfDaysBeforeExpiry)
+			{
+				System.out.println("before");
+				return -1;			
+			}
+			else if (s.numberOfDaysBeforeExpiry > s1.numberOfDaysBeforeExpiry)
+			{
+				System.out.println("after");
+				return 1;
+			}
+			else
+			{
+				if (s.distanceBetweenCurrentAndStrike < s1.distanceBetweenCurrentAndStrike)
+					return -1;
+				else if (s.distanceBetweenCurrentAndStrike > s1.distanceBetweenCurrentAndStrike)
+					return 1;
+				else 
+					return 0;
+			}
 
+		}
+		
+		
+	};
+	
+	
+	
 }
+	
+
+
+
