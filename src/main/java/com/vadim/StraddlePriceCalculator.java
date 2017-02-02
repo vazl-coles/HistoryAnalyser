@@ -43,7 +43,7 @@ public class StraddlePriceCalculator
     		writeStraddle();
     	}
     	else if (args[0].contains("GET"))
-    		System.out.println( getStraddlePrice(Integer.parseInt(args[1]), Float.parseFloat(args[2]), Float.parseFloat(args[3]), Float.parseFloat(args[5]) ));
+    		System.out.println( estimateStraddlePrice(Integer.parseInt(args[1]), Float.parseFloat(args[2]), Float.parseFloat(args[3]), Float.parseFloat(args[5]) ));
     	else 
     		System.out.println("The first argument should be either GET or ADD");
     		
