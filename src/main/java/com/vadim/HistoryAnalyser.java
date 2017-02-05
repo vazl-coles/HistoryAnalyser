@@ -43,7 +43,7 @@ public class HistoryAnalyser {
         addIndicators();
         
         // Make predictions based on history
-        Predictor.makePrediction(days.size()-1);
+        //Predictor.makePrediction(days.size()-1); // WIll create a log which will show probability of a close above and below certain expiry
         Predictor.performHistoricalProfitabilityAnalysis(days.size()-1);
 
     }
