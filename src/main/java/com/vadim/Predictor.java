@@ -38,13 +38,6 @@ public class Predictor {
 			numberOfDaysBeforeExpiry = 1;
 			while (numberOfDaysBeforeExpiry < 5)
 			{
-				//HistoricalTradeResult result = calculate(dayNumber, HistoryAnalyser.days.get(dayNumber).getClose(), strikePrice, numberOfDaysBeforeExpiry);
-				//System.out.println("Average profit=" + result.getAverageProfit());
-
-				//numberOfDaysBeforeExpiry++;
-				
-				//System.out.println("Strike price= " + strikePrice + " Number of Days before expiry=" + numberOfDaysBeforeExpiry);
-				//System.out.println("Day Number= " + dayNumber + " Close price=" + HistoryAnalyser.days.get(dayNumber).getClose());
 				vix = HistoryAnalyser.days.get(dayNumber).getVIX();
 				predictorOutputArrayList.add(
 						new PredictorOutput( strikePrice, numberOfDaysBeforeExpiry++,
@@ -73,58 +66,21 @@ public class Predictor {
 	
 	private static HistoricalTradeResult calculate(int dayNumber, float currentPrice, float strikePrice, int numberOfDaysBeforeExpiry, float vix )
 	{
+		// This method will return result object which will contain the information like 
+		// Average profit,  Total Profit, Biggest Drowdown
+		
 		HistoricalTradeResult result = new HistoricalTradeResult();
 		float straddlePrice, priceAtExpiry, roughStrikePrice;
 		// Scan through history and populate the result object
-		//System.out.println("Scan through history and populate the result object ");
 		for (int i = 0; i <= dayNumber; i++)
 		{
 			straddlePrice = StraddlePriceCalculator.getStraddlePrice(numberOfDaysBeforeExpiry, currentPrice, strikePrice, vix);
-			// straddlePrice = 1;
 			if ((i+numberOfDaysBeforeExpiry) < dayNumber)
 			{
-				//System.out.println("Calculate profit at "+ HistoryAnalyser.days.get(i).getStringDate());
 				priceAtExpiry = HistoryAnalyser.days.get(i+numberOfDaysBeforeExpiry).getClose();
 				// strikePrice should be calculated relative to the time in history. At the moment it contains todays strike price
 				roughStrikePrice = strikePrice/currentPrice*HistoryAnalyser.days.get(i).getClose();
-				/*
-				if ( strikePrice < currentPrice*0.995)
-					System.out.println("Historical close=" + HistoryAnalyser.days.get(i).getClose() + 
-									" Rough strike price=" + roughStrikePrice);
-				*/
-				/*
-				if (Math.abs(HistoryAnalyser.days.get(i).getClose()-priceAtExpiry) > 5)
-				{
-					System.out.println("Powerful move after "+ HistoryAnalyser.days.get(i).getStringDate());
-					System.out.println("Prices: "+ HistoryAnalyser.days.get(i).getClose() + 
-							";" + priceAtExpiry + 
-							";" + result.getTotalProfit() + 
-							";" + roughStrikePrice);
-					System.out.println("Straddle price:"+straddlePrice);
-				}
-				else if (Math.abs(HistoryAnalyser.days.get(i).getClose()-priceAtExpiry) < 1)
-				{
-					System.out.println("Weak move after "+ HistoryAnalyser.days.get(i).getStringDate());
-					System.out.println("Prices: "+ HistoryAnalyser.days.get(i).getClose() + 
-							";" + priceAtExpiry + 
-							";" + result.getTotalProfit() + 
-							";" + roughStrikePrice);
-					System.out.println("Straddle price:"+straddlePrice);
-				}
-				else
-				{
-				}
-				*/
-
 				result.calculateProfit(straddlePrice, priceAtExpiry, roughStrikePrice);
-				
-				/*
-				if (Math.abs(HistoryAnalyser.days.get(i).getClose()-priceAtExpiry) < 1)
-				{
-					System.out.println("Profit: "+ HistoryAnalyser.days.get(i).getClose() + ";" + priceAtExpiry + ";" + result.getTotalProfit());
-				}
-				*/
-					
 			}
 		}
 		// System.out.println("calculate Average profit=" + result.getAverageProfit());
