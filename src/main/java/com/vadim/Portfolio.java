@@ -20,6 +20,17 @@ public class Portfolio {
 	
 	}
 	
+	static void buyStock(String name,  int quantity, float price, float vix )
+	{
+		Contract contract = new Stock(name, quantity, price);
+		contracts.add(contract);
+		cash = cash - quantity*price*100;
+		cash = cash - contract.getCommission();
+		cash = cash - contract.getSlippage(vix);
+		
+	
+	}
+	
 	static float showCash()
 	{
 		 
