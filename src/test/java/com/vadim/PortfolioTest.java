@@ -11,7 +11,7 @@ import org.junit.Test;
 public class PortfolioTest {
 
 	  @Test
-	  public void testBuyOption() {
+	  public void testBuying() {
 
 		  //new Portfolio();
 		  float howMuchCashDoesPortfolioHave;
@@ -23,7 +23,15 @@ public class PortfolioTest {
 		  assertEquals(99796.9, (howMuchCashDoesPortfolioHave*100.0)/100.0,0.1); // 0.1 is the delta/max difference between two double numbers
 		  assertEquals(1, Portfolio.contracts.size());
 		  assertEquals(2, (Math.round(Portfolio.contracts.get(0).getPrice()*100.0)/100.0), 0);
+		  Portfolio.buyStock("SPY", 10, (float)100, 12);
+		  assertEquals(2, Portfolio.contracts.size());
+		  assertEquals(100, (Math.round(Portfolio.contracts.get(1).getPrice()*100.0)/100.0), 0);
+		  howMuchCashDoesPortfolioHave = Portfolio.showCash();
+		  assertEquals(98794.9, (howMuchCashDoesPortfolioHave*100.0)/100.0,0.1); // 0.1 is the delta/max difference between two double numbers
+
+		  
 	  }
+	  
 	  
 
 }

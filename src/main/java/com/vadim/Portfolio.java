@@ -24,7 +24,7 @@ public class Portfolio {
 	{
 		Contract contract = new Stock(name, quantity, price);
 		contracts.add(contract);
-		cash = cash - quantity*price*100;
+		cash = cash - quantity*price;
 		cash = cash - contract.getCommission();
 		cash = cash - contract.getSlippage(vix);
 		
