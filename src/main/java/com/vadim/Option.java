@@ -4,6 +4,7 @@ public class Option extends Contract {
 	String putOrCall;
 	String expiryDate;
 	float strikePrice;
+	float commission=(float)1.1;
 	
 	Option(String putOrCall, String name,  int quantity, float price, String expiryDate, float strikePrice)
 	{
@@ -42,6 +43,18 @@ public class Option extends Contract {
 	void setStrikePrice(float strikePrice)
 	{
 		this.strikePrice = strikePrice;
+	}
+	
+	@Override
+	float getCommission()
+	{
+		return commission;
+	}
+	
+	@Override
+	float getSlippage(float vix)
+	{
+		return (float)2.0;
 	}
 	
 }

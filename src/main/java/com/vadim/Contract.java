@@ -4,6 +4,7 @@ public class Contract {
 	String name;
 	int quantity;
 	float price;
+	float commission=1;
 	
 	Contract(String name,  int quantity, float price)
 	{
@@ -42,6 +43,15 @@ public class Contract {
 		this.name = name;
 	}
 	
+	float getCommission()
+	{
+		return commission;
+	}
+	
+	float getSlippage(float vix)
+	{
+		return (float)1.0;
+	}
 }
 
 
