@@ -1,18 +1,24 @@
 package com.vadim;
 
+import java.util.List;
+
 public class BackTester {
 	
-	static ProposedTransaction[] proposedTransactions;
+	static List <ProposedTransaction> proposedTransactions;
 	
 	public static void backTest(int dayNumber)
 	{
 		for (int i = 0; i <= dayNumber; i++)
 		{
+			/*
 			// Calculate profit, biggest drowdown, etc at the end of a day
 			// Add position according to what is written in rules file
 			proposedTransactions = Rules.whatDoIDoToday();
-			for (int j=0; j<proposedTransactions.length ; j++)
-			proposedTransactions[j].execute();
+			*/
+			// proposedTransactions = Analyser.suggestTransactions(HistoryAnalyser.days[i]);
+			proposedTransactions = Analyser.suggestTransactions();
+			for (int j=0; j<proposedTransactions.size() ; j++)
+				proposedTransactions.get(j).execute();
 
 		}
 		
