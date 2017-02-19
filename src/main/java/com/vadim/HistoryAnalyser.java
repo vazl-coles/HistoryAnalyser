@@ -42,6 +42,12 @@ public class HistoryAnalyser {
         Collections.sort(days );
         addIndicators();
         
+        // Collect stats from the information contained in days
+        for ( int daysBeforeExpiry = 0; daysBeforeExpiry < 20; daysBeforeExpiry++)
+        {
+        	StatsCollector.updateStats(daysBeforeExpiry);
+        }
+        
         // Make predictions based on history
         //Predictor.makePrediction(days.size()-1); // WIll create a log which will show probability of a close above and below certain expiry
         //Predictor.performHistoricalProfitabilityAnalysis(days.size()-1);
