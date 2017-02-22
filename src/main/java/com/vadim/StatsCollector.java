@@ -168,6 +168,7 @@ public class StatsCollector {
 		
 	}
 	
+	// This method exists for test purposes only
 	public static void updateStatsTest(int daysBeforeExpiry)
 	{
 		float priceDiff;
