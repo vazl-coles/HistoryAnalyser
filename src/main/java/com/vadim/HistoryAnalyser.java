@@ -42,11 +42,21 @@ public class HistoryAnalyser {
         Collections.sort(days );
         addIndicators();
         
+        StatsCollector.init();
         // Collect stats from the information contained in days
-        for ( int daysBeforeExpiry = 0; daysBeforeExpiry < 20; daysBeforeExpiry++)
+        for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= 20; daysBeforeExpiry++)
         {
         	StatsCollector.updateStats(daysBeforeExpiry);
+        	StatsCollector.displayExtremeValues(daysBeforeExpiry);
         }
+        
+        /*
+        // Display exteremes
+        for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= 20; daysBeforeExpiry++)
+        {
+        	StatsCollector.displayExtremeValues(daysBeforeExpiry);
+        }
+        */
         
         // Make predictions based on history
         //Predictor.makePrediction(days.size()-1); // WIll create a log which will show probability of a close above and below certain expiry
