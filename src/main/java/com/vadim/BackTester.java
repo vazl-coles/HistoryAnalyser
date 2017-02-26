@@ -24,6 +24,9 @@ public class BackTester {
 	        	//System.out.println("Day " + i);
 	        }
 	        
+	        // After collecting stats find mod of prices 6 months (long term) away that will be a pointer of 
+	        // of a center of a straddle
+	        
 			proposedTransactions = Analyser.suggestTransactions();
 			for (int j=0; j<proposedTransactions.size() ; j++)
 				proposedTransactions.get(j).execute();
