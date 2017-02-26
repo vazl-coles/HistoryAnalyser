@@ -42,6 +42,7 @@ public class HistoryAnalyser {
         Collections.sort(days );
         addIndicators();
         
+        /*
         StatsCollector.init();
         // Collect stats from the information contained in days
         for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= 20; daysBeforeExpiry++)
@@ -49,7 +50,7 @@ public class HistoryAnalyser {
         	StatsCollector.updateStats(daysBeforeExpiry);
         	StatsCollector.displayExtremeValues(daysBeforeExpiry);
         }
-        
+        */
         /*
         // Display exteremes
         for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= 20; daysBeforeExpiry++)

@@ -128,11 +128,15 @@ class StatsEntry {
 
 public class StatsCollector {
 	
-	static StatsPerDay[] daysBeforeExpiryArray = new StatsPerDay[20]; // Array 0 to 19 representing 1 - 20 day before expiry
+	static int maxNumberOfDaysBeforeExpiry;
+	
+	static StatsPerDay[] daysBeforeExpiryArray; // Array 0 to 19 representing 1 - 20 day before expiry
 	
 	static void init()
 	{
-		for (int i = 1; i <= 20 ; i++)
+		maxNumberOfDaysBeforeExpiry= 300;
+		daysBeforeExpiryArray = new StatsPerDay[maxNumberOfDaysBeforeExpiry];
+		for (int i = 1; i <= maxNumberOfDaysBeforeExpiry ; i++)
 		{
 			daysBeforeExpiryArray[i-1] = new StatsPerDay();
 			//daysBeforeExpiryArray[i-1].displayAll();
@@ -217,6 +221,11 @@ public class StatsCollector {
 		return daysBeforeExpiryArray[daysBeforeExpiry-1].getHighest();
 		//daysBeforeExpiryArray[daysBeforeExpiry-1].displayHighest();
 		
+	}
+	
+	public static int getMaxNumberOfDaysBeforeExpiry()
+	{
+		return maxNumberOfDaysBeforeExpiry;
 	}
 
 }

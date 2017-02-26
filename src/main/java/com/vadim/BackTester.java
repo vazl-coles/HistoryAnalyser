@@ -16,6 +16,14 @@ public class BackTester {
 			proposedTransactions = Rules.whatDoIDoToday();
 			*/
 			// proposedTransactions = Analyser.suggestTransactions(HistoryAnalyser.days[i]);
+			StatsCollector.init();
+	        for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= StatsCollector.getMaxNumberOfDaysBeforeExpiry(); daysBeforeExpiry++)
+	        {
+	        	StatsCollector.updateStats(daysBeforeExpiry);
+	        	//StatsCollector.displayExtremeValues(daysBeforeExpiry);
+	        	//System.out.println("Day " + i);
+	        }
+	        
 			proposedTransactions = Analyser.suggestTransactions();
 			for (int j=0; j<proposedTransactions.size() ; j++)
 				proposedTransactions.get(j).execute();
