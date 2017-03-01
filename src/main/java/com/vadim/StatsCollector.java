@@ -92,6 +92,26 @@ class StatsPerDay {
 		return i-25;
 	}
 	
+	int getMod()
+	{
+		int i;
+		int mod=0;
+		int modSubscript=0;
+		for (i = 0; i <= 49; i++)
+		{
+			//System.out.println("Test "+ statsEntries[i].getTotal());
+			if (statsEntries[i].getTotal() > mod )
+			{
+				//System.out.println("Mod "+ statsEntries[i].getTotal());
+				mod = statsEntries[i].getTotal();
+				modSubscript = i;
+				
+			}
+		}
+		return modSubscript;
+
+	}
+	
 	void displayAll()
 	{
 		int i;
@@ -219,6 +239,13 @@ public class StatsCollector {
 	public static int getHighest(int daysBeforeExpiry)
 	{
 		return daysBeforeExpiryArray[daysBeforeExpiry-1].getHighest();
+		//daysBeforeExpiryArray[daysBeforeExpiry-1].displayHighest();
+		
+	}
+	
+	public static int getMod(int daysBeforeExpiry)
+	{
+		return daysBeforeExpiryArray[daysBeforeExpiry-1].getMod();
 		//daysBeforeExpiryArray[daysBeforeExpiry-1].displayHighest();
 		
 	}

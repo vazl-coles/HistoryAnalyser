@@ -22,7 +22,39 @@ public class StatsCollectorTest {
 		  assertEquals(10, StatsCollector.getHighest(2));
 		  //StatsCollector.displayExtremeValues(2);
 		  
+		  // 3 days before expiry is subscript = 2
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(1);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(1);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(1);
 		  
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(2);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(2);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(2);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(2);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(2);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(2);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(2);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(2);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(2);
+		  
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(3);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(3);
+		  
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(0);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(0);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(0);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(0);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(0);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(0);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(0);
+		  
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(-1);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(-1);
+		  StatsCollector.daysBeforeExpiryArray[2].updateStatsEntry(-1);
+		  
+		  //StatsCollector.daysBeforeExpiryArray[3].displayAll();
+		  //assertEquals(10, StatsCollector.getHighest(3));
+		  assertEquals(27, StatsCollector.getMod(3));
 		  
 		  
 		  /*
