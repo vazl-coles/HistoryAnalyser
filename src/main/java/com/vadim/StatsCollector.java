@@ -169,11 +169,11 @@ public class StatsCollector {
 		float priceDiff;
 		float roundedPercentageDiff;
 		
-		for (int i = 0; i < HistoryAnalyser.days.size()- daysBeforeExpiry -1; i++)
+		for (int i = 0; i < History.days.size()- daysBeforeExpiry -1; i++)
 		{
-			priceDiff = HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() - HistoryAnalyser.days.get(i).getClose();
+			priceDiff = History.days.get(i+daysBeforeExpiry).getClose() - History.days.get(i).getClose();
 			//System.out.println("Price Difference " + priceDiff + " " + HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() + " " + HistoryAnalyser.days.get(i).getClose());
-			roundedPercentageDiff = Math.round(priceDiff/HistoryAnalyser.days.get(i).getClose()*100);
+			roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
 			//if (Math.abs(priceDiff) > 8 && daysBeforeExpiry == 1)
 				//System.out.println(HistoryAnalyser.days.get(i+daysBeforeExpiry).getStringDate() + "Price Difference " + priceDiff + " " + HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() + " " + HistoryAnalyser.days.get(i).getClose());
 				
@@ -189,6 +189,24 @@ public class StatsCollector {
 			daysBeforeExpiryArray[daysBeforeExpiry-1].displayLowest();
 		}
 		*/
+		
+	}
+	
+	public static void updateStats(int daysBeforeExpiry, String flag)
+	{
+		float priceDiff;
+		float roundedPercentageDiff;
+		
+		for (int i = 0; i < History.days.size()- daysBeforeExpiry -1; i++)
+		{
+			if (flag.equals("MA"))
+			{
+				//... We only consider days which are also above or below MA200, similar to today
+				priceDiff = History.days.get(i+daysBeforeExpiry).getClose() - History.days.get(i).getClose();
+				roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
+				daysBeforeExpiryArray[daysBeforeExpiry-1].updateStatsEntry(roundedPercentageDiff);
+			}
+		}
 		
 	}
 	

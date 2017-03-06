@@ -99,6 +99,8 @@ public class History {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        
+        Collections.sort(days );
     	
     }
     
@@ -183,6 +185,11 @@ public class History {
     public static int getWeekNumber(int index)
     {
     	return days.get(index).getWeekNumber();
+    }
+    
+    public static int getLastDay()
+    {
+    	return days.size();
     }
 
 }
