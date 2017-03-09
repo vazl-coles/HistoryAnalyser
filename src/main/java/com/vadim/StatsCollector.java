@@ -6,6 +6,7 @@ import java.util.List;
 class StatsPerDay {
 	
 	StatsEntry[]statsEntries = new StatsEntry[50];
+	int totalForAllEntries=0; // Used for calculation of probabilities
 	
 	StatsPerDay()
 	{
@@ -22,6 +23,7 @@ class StatsPerDay {
 		//System.out.println(" Current total " + statsEntries[arraySubscript].getTotal());
 		//System.out.println("Subscript "+ arraySubscript + " of " + roundedPercentageDiff);
 		statsEntries[arraySubscript].incrementTotal(); 
+		totalForAllEntries++;
 		
 	}
 	
@@ -39,6 +41,23 @@ class StatsPerDay {
 			return 49;
 		else
 			return subscript;
+	}
+	
+	static float calculatePercentageFromSubscript(int subscript)
+	{
+		float roundedPercentageDiff = subscript - 25;
+		return roundedPercentageDiff;
+
+	}
+	
+	int getTotalForAllEntries()
+	{
+		return totalForAllEntries;
+	}
+	
+	int getNumberOfEntriesForSpecificExpiry(int subscript)
+	{
+		return statsEntries[subscript].total;
 	}
 	
 	void displayLowest()
@@ -171,14 +190,49 @@ public class StatsCollector {
 		
 		for (int i = 0; i < History.days.size()- daysBeforeExpiry -1; i++)
 		{
-			priceDiff = History.days.get(i+daysBeforeExpiry).getClose() - History.days.get(i).getClose();
-			//System.out.println("Price Difference " + priceDiff + " " + HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() + " " + HistoryAnalyser.days.get(i).getClose());
-			roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
-			//if (Math.abs(priceDiff) > 8 && daysBeforeExpiry == 1)
-				//System.out.println(HistoryAnalyser.days.get(i+daysBeforeExpiry).getStringDate() + "Price Difference " + priceDiff + " " + HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() + " " + HistoryAnalyser.days.get(i).getClose());
+			if (PropertyHelper.getProperty("statsAboveBelowMA200").contains("Y") )
+			{
+				if (History.days.get(History.days.size()-1).getClose() > History.days.get(History.days.size()-1).getWeeklyMA())
+				{
+					// todays close is above MA
+					if (History.days.get(i).getClose() > History.days.get(History.days.size()-1).getWeeklyMA())
+					{
+						priceDiff = History.days.get(i+daysBeforeExpiry).getClose() - History.days.get(i).getClose();
+						roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
+						daysBeforeExpiryArray[daysBeforeExpiry-1].updateStatsEntry(roundedPercentageDiff);
+					}
+					else
+					{
+						// close is below MA
+					}
+				}
+				else
+				{
+					// todays is below MA
+					if (History.days.get(i).getClose() < History.days.get(History.days.size()-1).getWeeklyMA())
+					{
+						priceDiff = History.days.get(i+daysBeforeExpiry).getClose() - History.days.get(i).getClose();
+						roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
+						daysBeforeExpiryArray[daysBeforeExpiry-1].updateStatsEntry(roundedPercentageDiff);
+					}
+					else
+					{
+						// close is above MA
+					}
+					
+				}
+			}
+			else
+			{
+				priceDiff = History.days.get(i+daysBeforeExpiry).getClose() - History.days.get(i).getClose();
+				//System.out.println("Price Difference " + priceDiff + " " + HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() + " " + HistoryAnalyser.days.get(i).getClose());
+				roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
+				//if (Math.abs(priceDiff) > 8 && daysBeforeExpiry == 1)
+					//System.out.println(HistoryAnalyser.days.get(i+daysBeforeExpiry).getStringDate() + "Price Difference " + priceDiff + " " + HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() + " " + HistoryAnalyser.days.get(i).getClose());
 				
-			//System.out.println("Price Difference " + roundedPercentageDiff + " " + HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() + " " + HistoryAnalyser.days.get(i).getClose());
-			daysBeforeExpiryArray[daysBeforeExpiry-1].updateStatsEntry(roundedPercentageDiff);
+				//System.out.println("Price Difference " + roundedPercentageDiff + " " + HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() + " " + HistoryAnalyser.days.get(i).getClose());
+				daysBeforeExpiryArray[daysBeforeExpiry-1].updateStatsEntry(roundedPercentageDiff);
+			}
 			
 		}
 		/*
@@ -265,6 +319,30 @@ public class StatsCollector {
 	{
 		return daysBeforeExpiryArray[daysBeforeExpiry-1].getMod();
 		//daysBeforeExpiryArray[daysBeforeExpiry-1].displayHighest();
+		
+	}
+	
+	public static int getTotalForAllEntries(int daysBeforeExpiry)
+	{
+		return daysBeforeExpiryArray[daysBeforeExpiry-1].getTotalForAllEntries();
+		//daysBeforeExpiryArray[daysBeforeExpiry-1].displayHighest();
+		
+	}
+	
+	public static float getProbabilityOfPercentageChange(int daysBeforeExpiry, float percentageChange)
+	{
+		// find the subscript from percentage, e.g. 2% is subscript 27
+		int subscript = daysBeforeExpiryArray[daysBeforeExpiry-1].calculateSubscriptFromPercentage(percentageChange);
+		
+		//System.out.println("Number of entries " + daysBeforeExpiryArray[daysBeforeExpiry-1].getNumberOfEntriesForSpecificExpiry(subscript));
+		//System.out.println("Total of all entries " + daysBeforeExpiryArray[daysBeforeExpiry-1].getTotalForAllEntries());
+		return (float)daysBeforeExpiryArray[daysBeforeExpiry-1].getNumberOfEntriesForSpecificExpiry(subscript) / (float) daysBeforeExpiryArray[daysBeforeExpiry-1].getTotalForAllEntries();
+	}
+	
+	// this is used mainly for testing purpose
+	public static float calculatePercentageFromSubscript(int daysBeforeExpiry, int subscript)
+	{
+		return daysBeforeExpiryArray[daysBeforeExpiry-1].calculatePercentageFromSubscript(subscript);
 		
 	}
 	

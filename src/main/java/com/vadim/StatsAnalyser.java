@@ -27,12 +27,11 @@ public class StatsAnalyser {
     	
 		for (int i = 0; i <= History.getLastDay()-1; i++)
 		{
-
+			// Accumulate stats for a number of days before expiry
 			StatsCollector.init();
 	        for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= StatsCollector.getMaxNumberOfDaysBeforeExpiry(); daysBeforeExpiry++)
 	        {
 	        	StatsCollector.updateStats(daysBeforeExpiry); // Simple stats collections, check all dates without regards for MA or vix or whatever
-	        	StatsCollector.updateStats(daysBeforeExpiry, "MA"); // check all dates which are relevant for MA above or below MA200
 	        }
 	        
 
