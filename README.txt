@@ -28,3 +28,7 @@ and
 vix history.xltm
 
 These files were created to automate the process of downloading data. They are used to save information in csv format.
+
+Another class that can be activated is StatsAnalyser which will calculate probabilities for current day only:
+
+java -cp target/HistoryAnalyser-1.0-jar-with-dependencies.jar com.vadim.StatsAnalyser
