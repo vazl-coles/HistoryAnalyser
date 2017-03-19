@@ -139,7 +139,7 @@ public class History {
     	        	weeklyMA = calculateMA("Weekly", "Close", numberOfWeeks, weekNumber);
     	        	days.get(i).setWeeklyMA(weeklyMA);
     	        	
-    	        	
+    	        	/*
     	            System.out.println("date= " + days.get(i).getStringDate()
     	            		+ ", day= " + days.get(i).getDayOfWeek()
     	            		+ ", week number= " + days.get(i).getStringWeekNumber()
@@ -149,6 +149,7 @@ public class History {
     	            		+" , close= " + days.get(i).getClose()
     	            		+" , volume= " + days.get(i).getVolume()
     	            		+" , weekly MA = " + days.get(i).getWeeklyMA());
+    	            */
     	            
     	            CSVUtils.writeLine(writer, Arrays.asList(
     	            		days.get(i).getStringDate(),

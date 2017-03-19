@@ -149,6 +149,8 @@ class StatsPerDay {
                     if (statsEntries[i].getTotal() > 0)
                     {
                             System.out.println("Probability of " + calculatePercentageFromSubscript(i) + "% is "+ (float)statsEntries[i].getTotal()/ (float)totalForAllEntries * (float) 100);
+                            //System.out.println("Total expiry=" + statsEntries[i].getTotal() + " for " + calculatePercentageFromSubscript(i));
+                            //System.out.println("Total for all expiries=" + totalForAllEntries);
                     }
             }
 
@@ -183,6 +185,7 @@ public class StatsCollector {
 	static int maxNumberOfDaysBeforeExpiry;
 	
 	static StatsPerDay[] daysBeforeExpiryArray; // Array 0 to 19 representing 1 - 20 day before expiry
+	static int[] daysSelection; // Used to flag days to be used for calculating probabilities
 	
 	static void init()
 	{
@@ -194,6 +197,7 @@ public class StatsCollector {
 			//daysBeforeExpiryArray[i-1].displayAll();
 		}
 		
+		markDaysOfInterest(History.days.size()); // These are the days which are similar to the last day, e.g. have similar vix, above or below MA
 	}
 	
 	public static void updateStats(int daysBeforeExpiry)
@@ -267,6 +271,19 @@ public class StatsCollector {
            // Go through all days in history and use the information to build stats
            for (int i = 0; i < History.days.size()- daysBeforeExpiry -1; i++)
            {
+               if (isDayOfInterest(i))
+               {
+            	   priceDiff = History.days.get(i+daysBeforeExpiry).getClose() - History.days.get(i).getClose();
+            	   roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
+            	   if (roundedPercentageDiff > 15)
+            	   {
+            		   System.out.println("Jump " + History.days.get(i+daysBeforeExpiry).getClose() + " " + History.days.get(i+daysBeforeExpiry).getStringDate() );
+            		   System.out.println("From " + History.days.get(i).getClose() + " " + History.days.get(i).getStringDate() );
+            	   }
+            	   daysBeforeExpiryArray[daysBeforeExpiry-1].updateStatsEntry(roundedPercentageDiff);
+               }
+               
+               /*
                   if (PropertyHelper.getProperty("statsAboveBelowMA200").contains("Y") )
                   {
                         if (History.days.get(History.days.size()-1).getClose() > History.days.get(History.days.size()-1).getWeeklyMA())
@@ -308,6 +325,7 @@ public class StatsCollector {
                         //System.out.println("Price Difference " + roundedPercentageDiff + " " + HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() + " " + HistoryAnalyser.days.get(i).getClose());
                         daysBeforeExpiryArray[daysBeforeExpiry-1].updateStatsEntry(roundedPercentageDiff);
                   }
+                  */
            }
 
            /*
@@ -432,5 +450,75 @@ public class StatsCollector {
 	{
 		return maxNumberOfDaysBeforeExpiry;
 	}
+	
+    public static void markDaysOfInterest(int lastDay)
+    {
+		daysSelection = new int[History.days.size()];
+		for (int i = 0; i < History.days.size() -1; i++)
+		{
+			if (i < lastDay - 1)
+            {
+                // Check only days before this one
+				if (PropertyHelper.getProperty("statsAboveBelowMA200").contains("Y") )
+				{
+					/*
+					System.out.println(History.days.get(lastDay-1).getClose() + " " + History.days.get(lastDay-1).getWeeklyMA());
+					System.out.println(History.days.get(lastDay-1).getStringDate());
+					*/
+					if (History.days.get(lastDay-1).getClose() > History.days.get(lastDay-1).getWeeklyMA())
+					{
+						// todays close is below MA
+						if (History.days.get(i).getClose() < History.days.get(i).getWeeklyMA())
+						{
+							// not interested in this day
+                            daysSelection[i] = 0;
+                            continue;
+						}
+						else
+							daysSelection[i] = 1;
+					}
+					else
+					{
+						// todays close is above MA
+						if (History.days.get(i).getClose() > History.days.get(i).getWeeklyMA())
+						{
+							// not interested in this day
+                            daysSelection[i] = 0;
+                            continue;
+						}
+						else
+							daysSelection[i] = 1;
+					}
+				}
+				
+				if (PropertyHelper.getProperty("statsSimilarVIX").contains("Y") )
+				{
+					// todays close is above MA
+					if (History.days.get(i).getVIX() > History.days.get(lastDay-1).getVIX() * 1.1 ||
+						History.days.get(i).getVIX() < History.days.get(lastDay-1).getVIX() * 0.9)
+					{
+                        // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+					else
+						daysSelection[i] = 1;
+				}
+           }
+           else
+           {
+                  daysSelection[i] = 0;
+           }
+		}    
+    }
+   
+
+    public static boolean isDayOfInterest(int i)
+    {
+    	if (daysSelection[i] == 1)
+    		return true;
+        else
+            return false;
+    }
 
 }
