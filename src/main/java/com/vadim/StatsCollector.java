@@ -150,7 +150,7 @@ class StatsPerDay {
                     {
                             System.out.println("Probability of " + calculatePercentageFromSubscript(i) + "% is "+ (float)statsEntries[i].getTotal()/ (float)totalForAllEntries * (float) 100);
                             //System.out.println("Total expiry=" + statsEntries[i].getTotal() + " for " + calculatePercentageFromSubscript(i));
-                            //System.out.println("Total for all expiries=" + totalForAllEntries);
+                            //System.out.println("Total sample for all expiries=" + totalForAllEntries);
                     }
             }
 
