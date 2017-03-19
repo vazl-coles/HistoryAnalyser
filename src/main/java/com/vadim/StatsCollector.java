@@ -461,6 +461,7 @@ public class StatsCollector {
                 // Check only days before this one
 				if (PropertyHelper.getProperty("statsAboveBelowMA200").contains("Y") )
 				{
+					// Basic test whether we are in the bull market or not
 					/*
 					System.out.println(History.days.get(lastDay-1).getClose() + " " + History.days.get(lastDay-1).getWeeklyMA());
 					System.out.println(History.days.get(lastDay-1).getStringDate());
@@ -493,6 +494,7 @@ public class StatsCollector {
 				
 				if (PropertyHelper.getProperty("statsSimilarVIX").contains("Y") )
 				{
+					// VIX should indicate the calmness of the market
 					// todays close is above MA
 					if (History.days.get(i).getVIX() > History.days.get(lastDay-1).getVIX() * 1.1 ||
 						History.days.get(i).getVIX() < History.days.get(lastDay-1).getVIX() * 0.9)
