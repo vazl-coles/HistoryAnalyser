@@ -33,6 +33,8 @@ public class StatsAnalyser {
         	StatsCollector.updateStatsForToday(daysBeforeExpiry);
         	System.out.println("Probabilities for " + daysBeforeExpiry + " days before expiry" );
         	StatsCollector.displayProbabilities(daysBeforeExpiry);
+        	
+        	System.out.println("Total sample size " + StatsCollector.getTotalForAllEntries(daysBeforeExpiry));
         	//StatsCollector.updateStats(daysBeforeExpiry); // Simple stats collections, check all dates without regards for MA or vix or whatever
         }
     	/*

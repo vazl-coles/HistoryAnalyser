@@ -446,6 +446,7 @@ public class StatsCollector {
             daysBeforeExpiryArray[daysBeforeExpiry-1].displayProbabilities();
     }
     
+    
 	public static int getMaxNumberOfDaysBeforeExpiry()
 	{
 		return maxNumberOfDaysBeforeExpiry;
@@ -498,6 +499,33 @@ public class StatsCollector {
 					// todays close is above MA
 					if (History.days.get(i).getVIX() > History.days.get(lastDay-1).getVIX() * 1.1 ||
 						History.days.get(i).getVIX() < History.days.get(lastDay-1).getVIX() * 0.9)
+					{
+                        // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+					else
+						daysSelection[i] = 1;
+				}
+				
+				if (PropertyHelper.getProperty("statsSimilarMA50").contains("Y") )
+				{
+					// Check what happened when the distance from MA50 is similar to what it is today
+					float distanceFromMA50;
+					float distanceFromMA50LastDay;
+					
+					if (History.days.get(i).getMA50() == 0 || History.days.get(lastDay-1).getMA50() == 0)
+					{
+                        // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+						
+					// Calculate distance from MA50 in percentages
+					distanceFromMA50 = (History.days.get(i).getClose() - History.days.get(i).getMA50())/History.days.get(i).getMA50()*100;
+					distanceFromMA50LastDay = (History.days.get(lastDay-1).getClose() - History.days.get(lastDay-1).getMA50())/History.days.get(lastDay-1).getMA50()*100;
+					if (distanceFromMA50 > (distanceFromMA50LastDay + 0.5)||
+						distanceFromMA50 < (distanceFromMA50LastDay - 0.5 ))
 					{
                         // not interested in this day
 						daysSelection[i] = 0;

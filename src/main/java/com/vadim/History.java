@@ -112,6 +112,7 @@ public class History {
     	{
     	        int weekNumber=0;
     	        float weeklyMA;
+    	        float ma50;
     	        
     	        for (int i=0;i<days.size();i++)
     	        {
@@ -139,6 +140,9 @@ public class History {
     	        	weeklyMA = calculateMA("Weekly", "Close", numberOfWeeks, weekNumber);
     	        	days.get(i).setWeeklyMA(weeklyMA);
     	        	
+    	        	ma50 = calculateMA("Daily", "Close", 50, i);
+    	        	days.get(i).setMA50(ma50);
+    	        	
     	        	/*
     	            System.out.println("date= " + days.get(i).getStringDate()
     	            		+ ", day= " + days.get(i).getDayOfWeek()
@@ -160,7 +164,8 @@ public class History {
     	            		days.get(i).getStringLow(),
     	            		days.get(i).getStringClose(),
     	            		days.get(i).getStringVolume(),
-    	            		days.get(i).getStringWeeklyMA()
+    	            		days.get(i).getStringWeeklyMA(),
+    	            		days.get(i).getMA50String()
     	            		));
     	            		
     	            		
@@ -195,8 +200,7 @@ public class History {
     
 	public static float calculateMA(String typeOfMA, String TypeOfIndicator, int numOfEntries, int lastEntry)
 	{
-		if (typeOfMA.equals("Weekly"))
-		{
+
 			if (lastEntry < numOfEntries)
 			{
 				return 0;
@@ -207,8 +211,6 @@ public class History {
 				return calculateAverage(typeOfMA, TypeOfIndicator, numOfEntries, lastEntry);
 			}
 			
-		}
-		return 0;
 		
 	}
 	
@@ -255,6 +257,14 @@ public class History {
 					alreadyProcessedWeek = days.get(i).getWeekNumber();
 				}
 				i = i - 1;
+			}
+		}
+		else
+		{
+			for (i = lastEntry; i > lastEntry - numOfEntries; i-- )
+			{
+				if ( i < 0) break;
+				total = total + days.get(i).getClose();
 			}
 		}
 		average = total/numOfEntries;

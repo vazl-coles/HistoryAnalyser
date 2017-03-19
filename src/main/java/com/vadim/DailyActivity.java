@@ -19,6 +19,7 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	private float volume;
 	private float vix;
 	private float weeklyMA;
+	private float ma50;
 
 	
 	public DailyActivity(String date, String open, String high, String low, String close, String volume, String vix)
@@ -204,6 +205,21 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	public float getWeeklyMA()
 	{
 		return this.weeklyMA;
+	}
+	
+	public void setMA50(float ma50)
+	{
+		this.ma50 = ma50;
+	}
+	
+	public String getMA50String()
+	{
+		return String.valueOf(this.ma50);
+	}
+	
+	public float getMA50()
+	{
+		return this.ma50;
 	}
 	
 	// Overriding the compare method to sort by date 
