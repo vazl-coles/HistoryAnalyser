@@ -30,6 +30,16 @@ public class StatsAnalyser {
         for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= StatsCollector.getMaxNumberOfDaysBeforeExpiry(); daysBeforeExpiry++)
         {
         	if (daysBeforeExpiry > 100) continue;
+        	if (daysBeforeExpiry < 10)
+        	{
+        		
+        	}
+        	else
+        	if (daysBeforeExpiry == 20 || daysBeforeExpiry == 40 || daysBeforeExpiry == 70 || daysBeforeExpiry == 100 )
+        	{
+        		
+        	}
+        	else continue;
         	StatsCollector.updateStatsForToday(daysBeforeExpiry);
         	System.out.println("Probabilities for " + daysBeforeExpiry + " days before expiry" );
         	StatsCollector.displayProbabilities(daysBeforeExpiry);
