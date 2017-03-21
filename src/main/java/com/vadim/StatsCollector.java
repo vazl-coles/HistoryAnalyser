@@ -534,6 +534,105 @@ public class StatsCollector {
 					else
 						daysSelection[i] = 1;
 				}
+				
+				if (PropertyHelper.getProperty("statsSimilarWeek").contains("Y") )
+				{
+					if (i < 10)
+					{
+                        // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+					// Check if this was a rising week
+					if (History.days.get(lastDay-1).getClose() > History.days.get(lastDay-1-5).getClose())
+					{
+						if (History.days.get(i).getClose() < History.days.get(i-5).getClose())
+						{
+	                        // not interested in this day
+							daysSelection[i] = 0;
+							continue;
+						}
+						else
+							daysSelection[i] = 1;
+					}
+					else
+					{
+						if (History.days.get(i).getClose() > History.days.get(i-5).getClose())
+						{
+	                        // not interested in this day
+							daysSelection[i] = 0;
+							continue;
+						}
+						else
+							daysSelection[i] = 1;
+					}
+				}
+				
+				if (PropertyHelper.getProperty("statsSimilarMonth").contains("Y") )
+				{
+					if (i < 30)
+					{
+                        // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+					// Check if this was a rising week
+					if (History.days.get(lastDay-1).getClose() > History.days.get(lastDay-1-20).getClose())
+					{
+						if (History.days.get(i).getClose() < History.days.get(i-20).getClose())
+						{
+	                        // not interested in this day
+							daysSelection[i] = 0;
+							continue;
+						}
+						else
+							daysSelection[i] = 1;
+					}
+					else
+					{
+						if (History.days.get(i).getClose() > History.days.get(i-20).getClose())
+						{
+	                        // not interested in this day
+							daysSelection[i] = 0;
+							continue;
+						}
+						else
+							daysSelection[i] = 1;
+					}
+				}
+				
+				if (PropertyHelper.getProperty("statsSimilarMA50Trend").contains("Y") )
+				{
+					if (i < 100)
+					{
+                        // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+					// Check if this was a rising week
+					if (History.days.get(lastDay-1).getMA50() > History.days.get(lastDay-1-20).getMA50())
+					{
+						if (History.days.get(i).getMA50() < History.days.get(i-20).getMA50())
+						{
+	                        // not interested in this day
+							daysSelection[i] = 0;
+							continue;
+						}
+						else
+							daysSelection[i] = 1;
+					}
+					else
+					{
+						if (History.days.get(i).getMA50() > History.days.get(i-20).getMA50())
+						{
+	                        // not interested in this day
+							daysSelection[i] = 0;
+							continue;
+						}
+						else
+							daysSelection[i] = 1;
+					}
+				}
            }
            else
            {
