@@ -633,6 +633,142 @@ public class StatsCollector {
 							daysSelection[i] = 1;
 					}
 				}
+				
+				
+				if (PropertyHelper.getProperty("statsAfter1UpOrDownDay").contains("Y") )
+				{
+					if (i < 10)
+					{
+                        // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+					// Check if this was a rising day
+					if (History.days.get(lastDay-1).getClose() > History.days.get(lastDay-1-1).getClose())
+					{
+						if (History.days.get(i).getClose() < History.days.get(i-1).getClose())
+						{
+	                        // not interested in this day
+							daysSelection[i] = 0;
+							continue;
+						}
+						else
+							daysSelection[i] = 1;
+					}
+					else
+					{
+						if (History.days.get(i).getClose() > History.days.get(i-1).getClose())
+						{
+	                        // not interested in this day
+							daysSelection[i] = 0;
+							continue;
+						}
+						else
+							daysSelection[i] = 1;
+					}
+				}
+				
+				/*
+				
+				if (PropertyHelper.getProperty("statsAfter3UpOrDownDays").contains("Y") )
+				{
+					if (i < 10)
+					{
+                        // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+					// Check if this was a rising few days
+					if (RoseThreeDaysInARow(lastDay-1))
+					{
+						if (RoseThreeDaysInARow(i))
+						{
+							// not interested in this day
+							daysSelection[i] = 1;
+						}
+						else
+						{
+	                        // not interested in this day
+							daysSelection[i] = 0;
+							continue;						
+						}
+					}
+					else if (DroppedThreeDaysInARow(lastDay-1))
+					{
+						if (DroppedThreeDaysInARow(i))
+						{
+							daysSelection[i] = 1;
+						}
+						else
+						{
+	                        // not interested in this day
+							daysSelection[i] = 0;
+							continue;
+						}
+					}
+					else
+					{
+                        // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+						
+					}
+				}
+				*/
+				
+				if (RoseThreeDaysInARow(lastDay-1) || DroppedThreeDaysInARow(lastDay-1) )
+				{
+					if (i < 10)
+					{
+                        // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+					// Check if this was a rising few days
+					if (RoseThreeDaysInARow(lastDay-1))
+					{
+						if (RoseThreeDaysInARow(i))
+						{
+							// not interested in this day
+							daysSelection[i] = 1;
+						}
+						else
+						{
+	                        // not interested in this day
+							daysSelection[i] = 0;
+							continue;						
+						}
+					}
+					else if (DroppedThreeDaysInARow(lastDay-1))
+					{
+						if (DroppedThreeDaysInARow(i))
+						{
+							daysSelection[i] = 1;
+						}
+						else
+						{
+	                        // not interested in this day
+							daysSelection[i] = 0;
+							continue;
+						}
+					}
+					else
+					{
+                        // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+						
+					}
+				}
+				
+				if (daysSelection[i] == 1)
+				{
+					/*
+					System.out.println(History.days.get(i).getStringDate());
+					System.out.println(History.days.get(i-1).getClose() + " MA " + History.days.get(i-1).getWeeklyMA());
+					System.out.println(History.days.get(i-1-1).getClose() + " Prev " + History.days.get(i-1-2).getClose() + " " + History.days.get(i-1-3).getClose());
+					*/
+				}
            }
            else
            {
@@ -641,6 +777,30 @@ public class StatsCollector {
 		}    
     }
    
+    public static boolean RoseThreeDaysInARow(int i)
+    {
+    	/*
+		System.out.println(History.days.get(i).getStringDate());
+		System.out.println(History.days.get(i).getClose() + " MA " + History.days.get(i-1).getWeeklyMA());
+		System.out.println(History.days.get(i-1).getClose() + " Prev " + History.days.get(i-2).getClose() + " " + History.days.get(i-3).getClose());
+		*/
+    	if (History.days.get(i).getClose() > History.days.get(i-1).getClose())
+    		if (History.days.get(i-1).getClose() > History.days.get(i-2).getClose())
+    			if (History.days.get(i-2).getClose() > History.days.get(i-3).getClose())
+    				return true;
+
+        return false;
+    }
+    
+    public static boolean DroppedThreeDaysInARow(int i)
+    {
+    	if (History.days.get(i).getClose() < History.days.get(i-1).getClose())
+    		if (History.days.get(i-1).getClose() < History.days.get(i-2).getClose())
+    			if (History.days.get(i-2).getClose() < History.days.get(i-3).getClose())
+    				return true;
+
+        return false;
+    }
 
     public static boolean isDayOfInterest(int i)
     {
