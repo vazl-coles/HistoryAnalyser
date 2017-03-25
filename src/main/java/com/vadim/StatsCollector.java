@@ -155,6 +155,22 @@ class StatsPerDay {
             }
 
     }
+    
+    void displayProbabilitiesWithDetails()
+    {
+            int i;
+            for (i = 0; i < 50; i++)
+            {
+                    if (statsEntries[i].getTotal() > 0)
+                    {
+                            System.out.println("Probability of " + calculatePercentageFromSubscript(i) + "% is "+ (float)statsEntries[i].getTotal()/ (float)totalForAllEntries * (float) 100);
+                            System.out.println("Total " +  statsEntries[i].getTotal());
+                            //System.out.println("Total expiry=" + statsEntries[i].getTotal() + " for " + calculatePercentageFromSubscript(i));
+                            //System.out.println("Total sample for all expiries=" + totalForAllEntries);
+                    }
+            }
+
+    }
 	
 }
 
@@ -444,6 +460,12 @@ public class StatsCollector {
     public static void displayProbabilities(int daysBeforeExpiry)
     {
             daysBeforeExpiryArray[daysBeforeExpiry-1].displayProbabilities();
+            /*
+            if (daysBeforeExpiry == 100)
+            {
+            	daysBeforeExpiryArray[daysBeforeExpiry-1].displayProbabilitiesWithDetails();
+            }
+            */
     }
     
     
@@ -765,8 +787,9 @@ public class StatsCollector {
 				{
 					/*
 					System.out.println(History.days.get(i).getStringDate());
-					System.out.println(History.days.get(i-1).getClose() + " MA " + History.days.get(i-1).getWeeklyMA());
-					System.out.println(History.days.get(i-1-1).getClose() + " Prev " + History.days.get(i-1-2).getClose() + " " + History.days.get(i-1-3).getClose());
+					System.out.println(History.days.get(i).getClose() + " MA " + History.days.get(i).getWeeklyMA());
+					if (i < lastDay-100)
+						System.out.println("100 later close" + History.days.get(i+100).getClose());
 					*/
 				}
            }
