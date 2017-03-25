@@ -113,6 +113,7 @@ public class History {
     	        int weekNumber=0;
     	        float weeklyMA;
     	        float ma50;
+    	        int numberOfDaysSinceMA50Cross;
     	        
     	        for (int i=0;i<days.size();i++)
     	        {
@@ -143,6 +144,42 @@ public class History {
     	        	ma50 = calculateMA("Daily", "Close", 50, i);
     	        	days.get(i).setMA50(ma50);
     	        	
+    	        	if (ma50 == 0)
+    	        	{
+    	        		numberOfDaysSinceMA50Cross = 0;
+    	        		days.get(i).setNumberOfDaysSinceMA50Cross(0);
+    	        	}
+    	        	else
+    	        	{
+    	        		if (days.get(i).getMA50() > days.get(i).getClose() && days.get(i-1).getMA50() > days.get(i-1).getClose())
+    	        		{
+    	        			days.get(i).setNumberOfDaysSinceMA50Cross(days.get(i-1).getNumberOfDaysSinceMA50Cross() + 1);
+    	        		}
+    	        		else if (days.get(i).getMA50() < days.get(i).getClose() && days.get(i-1).getMA50() < days.get(i-1).getClose())
+        	        	{
+        	        		days.get(i).setNumberOfDaysSinceMA50Cross(days.get(i-1).getNumberOfDaysSinceMA50Cross() + 1);
+        	        	}
+    	        		else if (days.get(i).getMA50() < days.get(i).getClose() && days.get(i-1).getMA50() > days.get(i-1).getClose())
+    	        		{
+    	        			// MA50 cross
+    	        			days.get(i).setNumberOfDaysSinceMA50Cross(0);
+    	        		}
+    	        		else if (days.get(i).getMA50() > days.get(i).getClose() && days.get(i-1).getMA50() < days.get(i-1).getClose())
+    	        		{
+    	        			// MA50 cross
+    	        			days.get(i).setNumberOfDaysSinceMA50Cross(0);
+    	        		}
+    	        		else if (days.get(i-1).getNumberOfDaysSinceMA50Cross() == 0)
+    	        		{
+    	        			days.get(i).setNumberOfDaysSinceMA50Cross(1);
+    	        		}
+    	        		else
+    	        		{
+    	        			days.get(i).setNumberOfDaysSinceMA50Cross(0);
+    	        		}
+    	        		
+    	        	}
+    	        	
     	        	/*
     	            System.out.println("date= " + days.get(i).getStringDate()
     	            		+ ", day= " + days.get(i).getDayOfWeek()
@@ -165,7 +202,8 @@ public class History {
     	            		days.get(i).getStringClose(),
     	            		days.get(i).getStringVolume(),
     	            		days.get(i).getStringWeeklyMA(),
-    	            		days.get(i).getMA50String()
+    	            		days.get(i).getMA50String(),
+    	            		days.get(i).getNumberOfDaysSinceMA50CrossString()
     	            		));
     	            		
     	            		

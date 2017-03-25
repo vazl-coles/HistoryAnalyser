@@ -519,8 +519,8 @@ public class StatsCollector {
 				{
 					// VIX should indicate the calmness of the market
 					// todays close is above MA
-					if (History.days.get(i).getVIX() > History.days.get(lastDay-1).getVIX() * 1.1 ||
-						History.days.get(i).getVIX() < History.days.get(lastDay-1).getVIX() * 0.9)
+					if (History.days.get(i).getVIX() > History.days.get(lastDay-1).getVIX() * 1.5 ||
+						History.days.get(i).getVIX() < History.days.get(lastDay-1).getVIX() * 0.7)
 					{
                         // not interested in this day
 						daysSelection[i] = 0;
@@ -782,6 +782,63 @@ public class StatsCollector {
 						
 					}
 				}
+				
+
+				if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() > 0)
+				{
+					if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() < (float)History.days.get(i).getNumberOfDaysSinceMA50Cross()*0.8)
+					{
+						daysSelection[i] = 1;
+					}
+					else
+					{
+	                    // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+
+					/*
+					//System.out.println(History.days.get(i).getStringDate() + " " + History.days.get(i).getNumberOfDaysSinceMA50Cross());
+					//System.out.println(History.days.get(lastDay-1).getStringDate() + " " + History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross());
+					
+					if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() >= 80 &&
+						History.days.get(i).getNumberOfDaysSinceMA50Cross() < 80)
+					{
+		                    // not interested in this day
+							daysSelection[i] = 0;
+							continue;
+					}				
+					else if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() >= 80 &&
+						    History.days.get(i).getNumberOfDaysSinceMA50Cross() >= 80)
+					{
+						daysSelection[i] = 1;
+					}
+					else if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() < 80 &&
+							History.days.get(i).getNumberOfDaysSinceMA50Cross() < 80)
+					{
+						daysSelection[i] = 1;
+					}
+					else
+					{
+	                    // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+					*/
+					
+				}
+					/*
+					if (History.days.get(i).getNumberOfDaysSinceMA50Cross() > History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() * 1.2 ||
+						History.days.get(i).getNumberOfDaysSinceMA50Cross() < History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() * 0.8)
+					{
+	                    // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+					else
+						daysSelection[i] = 1;
+					*/
+
 				
 				if (daysSelection[i] == 1)
 				{

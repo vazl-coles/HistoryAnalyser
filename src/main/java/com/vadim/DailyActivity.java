@@ -20,6 +20,7 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	private float vix;
 	private float weeklyMA;
 	private float ma50;
+	private int numberOfDaysSinceMA50Cross;
 
 	
 	public DailyActivity(String date, String open, String high, String low, String close, String volume, String vix)
@@ -220,6 +221,21 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	public float getMA50()
 	{
 		return this.ma50;
+	}
+	
+	public void setNumberOfDaysSinceMA50Cross(int numberOfDaysSinceMA50Cross)
+	{
+		this.numberOfDaysSinceMA50Cross = numberOfDaysSinceMA50Cross;
+	}
+	
+	public String getNumberOfDaysSinceMA50CrossString()
+	{
+		return String.valueOf(this.numberOfDaysSinceMA50Cross);
+	}
+	
+	public int getNumberOfDaysSinceMA50Cross()
+	{
+		return this.numberOfDaysSinceMA50Cross;
 	}
 	
 	// Overriding the compare method to sort by date 
