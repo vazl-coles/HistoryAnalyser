@@ -29,6 +29,7 @@ public class StatsAnalyser {
 		StatsCollector.init(); // Will mark all days in the past which look similar, e.g. above MA
         for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= StatsCollector.getMaxNumberOfDaysBeforeExpiry(); daysBeforeExpiry++)
         {
+        	/*
         	if (daysBeforeExpiry > 100) continue;
         	if (daysBeforeExpiry < 10)
         	{
@@ -40,13 +41,15 @@ public class StatsAnalyser {
         		
         	}
         	else continue;
+        	*/
         	StatsCollector.updateStatsForToday(daysBeforeExpiry);
-        	System.out.println("Probabilities for " + daysBeforeExpiry + " days before expiry" );
-        	StatsCollector.displayProbabilities(daysBeforeExpiry);
+        	//System.out.println("Probabilities for " + daysBeforeExpiry + " days before expiry" );
+        	//StatsCollector.displayProbabilities(daysBeforeExpiry);
         	
-        	System.out.println("Total sample size " + StatsCollector.getTotalForAllEntries(daysBeforeExpiry));
+        	//System.out.println("Total sample size " + StatsCollector.getTotalForAllEntries(daysBeforeExpiry));
         	//StatsCollector.updateStats(daysBeforeExpiry); // Simple stats collections, check all dates without regards for MA or vix or whatever
         }
+        StatsCollector.findMostLikelyDays(); 
     	/*
 		for (int i = 0; i <= History.getLastDay()-1; i++)
 		{

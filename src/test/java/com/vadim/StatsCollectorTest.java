@@ -10,6 +10,7 @@ public class StatsCollectorTest {
 	  public void testInnerClassesofStats() {
 		  
 		  StatsCollector.init();
+		  
 		  // Call test method to populate the array
 		  StatsCollector.updateStatsTest(1);
 		  //StatsCollector.displayExtremeValues(1);

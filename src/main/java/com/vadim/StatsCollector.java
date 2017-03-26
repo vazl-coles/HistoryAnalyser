@@ -7,6 +7,8 @@ class StatsPerDay {
 	
 	StatsEntry[]statsEntries = new StatsEntry[50];
 	int totalForAllEntries=0; // Used for calculation of probabilities
+	int modForAllEntries=0; // Used for selection of most accurate predictors
+	int range=0; // Used to indicate the quality of prediction.  The range should not be wide.
 	
 	StatsPerDay()
 	{
@@ -19,11 +21,20 @@ class StatsPerDay {
 	void updateStatsEntry(float roundedPercentageDiff)
 	{
 		int arraySubscript = calculateSubscriptFromPercentage(roundedPercentageDiff);
-		//System.out.println("Updating "+ arraySubscript );
-		//System.out.println(" Current total " + statsEntries[arraySubscript].getTotal());
-		//System.out.println("Subscript "+ arraySubscript + " of " + roundedPercentageDiff);
+		/*
+		System.out.println("Updating "+ arraySubscript );
+		System.out.println(" Current total " + statsEntries[arraySubscript].getTotal());
+		System.out.println("Subscript "+ arraySubscript + " of " + roundedPercentageDiff);
+		*/
 		statsEntries[arraySubscript].incrementTotal(); 
+		if (statsEntries[arraySubscript].getTotal() > statsEntries[modForAllEntries].getTotal())
+		{
+			//System.out.println("modForAllEntries "+ modForAllEntries );
+			modForAllEntries = arraySubscript; // This is a subscript of the array that has a highest total
+		}
 		totalForAllEntries++;
+		//System.out.println("mod is at "+ modForAllEntries + " number is " + statsEntries[modForAllEntries].getTotal());
+		//System.out.println("current total is at "+ arraySubscript + " number is " + statsEntries[arraySubscript].getTotal());
 		
 	}
 	
@@ -113,6 +124,7 @@ class StatsPerDay {
 	
 	int getMod()
 	{
+		/*
 		int i;
 		int mod=0;
 		int modSubscript=0;
@@ -127,7 +139,29 @@ class StatsPerDay {
 				
 			}
 		}
-		return modSubscript;
+		*/
+		return modForAllEntries;
+
+	}
+	
+	int getModTotal()
+	{
+
+		return statsEntries[modForAllEntries].getTotal();
+
+	}
+	
+	
+	void setRange()
+	{
+		range = getHighest() - getLowest();
+
+
+	}
+	
+	int getRange()
+	{
+		return range;
 
 	}
 	
@@ -293,67 +327,13 @@ public class StatsCollector {
             	   roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
             	   if (roundedPercentageDiff > 15)
             	   {
-            		   System.out.println("Jump " + History.days.get(i+daysBeforeExpiry).getClose() + " " + History.days.get(i+daysBeforeExpiry).getStringDate() );
-            		   System.out.println("From " + History.days.get(i).getClose() + " " + History.days.get(i).getStringDate() );
+            		   //System.out.println("Jump " + History.days.get(i+daysBeforeExpiry).getClose() + " " + History.days.get(i+daysBeforeExpiry).getStringDate() );
+            		   //System.out.println("From " + History.days.get(i).getClose() + " " + History.days.get(i).getStringDate() );
             	   }
             	   daysBeforeExpiryArray[daysBeforeExpiry-1].updateStatsEntry(roundedPercentageDiff);
                }
                
-               /*
-                  if (PropertyHelper.getProperty("statsAboveBelowMA200").contains("Y") )
-                  {
-                        if (History.days.get(History.days.size()-1).getClose() > History.days.get(History.days.size()-1).getWeeklyMA())
-                        {
-                               // todays close is above MA
-                               if (History.days.get(i).getClose() > History.days.get(History.days.size()-1).getWeeklyMA())
-                               {
-                                      priceDiff = History.days.get(i+daysBeforeExpiry).getClose() - History.days.get(i).getClose();
-                                      roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
-                                      daysBeforeExpiryArray[daysBeforeExpiry-1].updateStatsEntry(roundedPercentageDiff);
-                               }
-                               else
-                               {
-                                      // close is below MA
-                               }
-                        }
-                        else
-                        {
-                               // todays is below MA
-                               if (History.days.get(i).getClose() < History.days.get(History.days.size()-1).getWeeklyMA())
-                               {
-                                      priceDiff = History.days.get(i+daysBeforeExpiry).getClose() - History.days.get(i).getClose();
-                                      roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
-                                      daysBeforeExpiryArray[daysBeforeExpiry-1].updateStatsEntry(roundedPercentageDiff);
-                               }
-                               else
-                               {
-                                      // close is above MA
-                               }
-                        }
-                  }
-                  else
-                  {
-                        priceDiff = History.days.get(i+daysBeforeExpiry).getClose() - History.days.get(i).getClose();
-                        //System.out.println("Price Difference " + priceDiff + " " + HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() + " " + HistoryAnalyser.days.get(i).getClose());
-                        roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
-                        //if (Math.abs(priceDiff) > 8 && daysBeforeExpiry == 1)
-                               //System.out.println(HistoryAnalyser.days.get(i+daysBeforeExpiry).getStringDate() + "Price Difference " + priceDiff + " " + HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() + " " + HistoryAnalyser.days.get(i).getClose());
-                        //System.out.println("Price Difference " + roundedPercentageDiff + " " + HistoryAnalyser.days.get(i+daysBeforeExpiry).getClose() + " " + HistoryAnalyser.days.get(i).getClose());
-                        daysBeforeExpiryArray[daysBeforeExpiry-1].updateStatsEntry(roundedPercentageDiff);
-                  }
-                  */
            }
-
-           /*
-           if (daysBeforeExpiry == 1)
-           {
-                  System.out.println("Number of days befory expiry" + daysBeforeExpiry);
-
-                  daysBeforeExpiryArray[daysBeforeExpiry-1].displayLowest();
-           }
-           */
-
-          
 
     }
 	
@@ -381,6 +361,7 @@ public class StatsCollector {
 		float priceDiff;
 		float roundedPercentageDiff;
 		
+		System.out.println("updateStatsTest " + daysBeforeExpiry);
 		float i = -5*daysBeforeExpiry;
 		while (i < 5*daysBeforeExpiry)
 		{
@@ -426,6 +407,21 @@ public class StatsCollector {
 		
 	}
 	
+	public static int getRange(int daysBeforeExpiry)
+	{
+		
+		return daysBeforeExpiryArray[daysBeforeExpiry-1].getRange();
+		//daysBeforeExpiryArray[daysBeforeExpiry-1].displayHighest();
+		
+	}
+	
+	public static void setRange(int daysBeforeExpiry)
+	{
+		
+		daysBeforeExpiryArray[daysBeforeExpiry-1].setRange();
+		
+	}
+	
 	public static int getMod(int daysBeforeExpiry)
 	{
 		return daysBeforeExpiryArray[daysBeforeExpiry-1].getMod();
@@ -466,6 +462,58 @@ public class StatsCollector {
             	daysBeforeExpiryArray[daysBeforeExpiry-1].displayProbabilitiesWithDetails();
             }
             */
+    }
+    
+    public static void findMostLikelyDays()
+    {
+    	int mod=0;
+    	
+		for (int i = 1; i <= maxNumberOfDaysBeforeExpiry ; i++)
+		{
+			/*
+        	if (i > 100) continue;
+        	if (i < 10)
+        	{
+        		
+        	}
+        	else
+        	if (i == 20 || i == 40 || i == 70 || i == 100 )
+        	{
+        		
+        	}
+        	else continue;
+        	*/
+			daysBeforeExpiryArray[i-1].setRange(); // Calculate the spread between predictions
+			if (daysBeforeExpiryArray[i-1].getModTotal() > mod)
+			{
+				mod = daysBeforeExpiryArray[i-1].getModTotal(); // Find most interesting predictions
+				System.out.println("mod="+mod+ " total " + daysBeforeExpiryArray[i-1].getModTotal());
+			}
+			//daysBeforeExpiryArray[i-1].displayAll();
+		}
+		
+		for (int i = 1; i <= maxNumberOfDaysBeforeExpiry ; i++)
+		{
+			/*
+        	if (i > 100) continue;
+        	if (i < 10)
+        	{
+        		
+        	}
+        	else
+        	if (i == 20 || i == 40 || i == 70 || i == 100 )
+        	{
+        		
+        	}
+        	else continue;*/
+			if (daysBeforeExpiryArray[i-1].getModTotal() >= mod -1  )
+			{
+				System.out.println("Probabilities for " + i + " days before expiry" );
+				StatsCollector.displayProbabilities(i);
+        	
+				System.out.println("Total sample size " + StatsCollector.getTotalForAllEntries(i));
+			}
+		}
     }
     
     
