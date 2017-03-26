@@ -26,7 +26,7 @@ public class StatsAnalyser {
     	History.addIndicators();
     	
 		// Accumulate stats for a number of days before expiry
-		StatsCollector.init();
+		StatsCollector.init(); // Will mark all days in the past which look similar, e.g. above MA
         for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= StatsCollector.getMaxNumberOfDaysBeforeExpiry(); daysBeforeExpiry++)
         {
         	if (daysBeforeExpiry > 100) continue;
