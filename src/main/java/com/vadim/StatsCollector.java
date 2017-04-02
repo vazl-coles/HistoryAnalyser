@@ -234,12 +234,21 @@ public class StatsCollector {
 	
 	static int maxNumberOfDaysBeforeExpiry;
 	
+	static int sampleSize = 0;
+	
 	static StatsPerDay[] daysBeforeExpiryArray; // Array 0 to 19 representing 1 - 20 day before expiry
 	static int[] daysSelection; // Used to flag days to be used for calculating probabilities
+	static int markType=0;
+	
+	static int numberOfDaysSinceMA50CrossStart=120;
+	static int numberOfDaysSinceMA50CrossEnd=80;
+	static int numberOfDaysSinceMA50CrossJump=10;
+	
 	
 	static void init()
 	{
 		maxNumberOfDaysBeforeExpiry= 300;
+		sampleSize = 0;
 		daysBeforeExpiryArray = new StatsPerDay[maxNumberOfDaysBeforeExpiry];
 		for (int i = 1; i <= maxNumberOfDaysBeforeExpiry ; i++)
 		{
@@ -470,19 +479,6 @@ public class StatsCollector {
     	
 		for (int i = 1; i <= maxNumberOfDaysBeforeExpiry ; i++)
 		{
-			/*
-        	if (i > 100) continue;
-        	if (i < 10)
-        	{
-        		
-        	}
-        	else
-        	if (i == 20 || i == 40 || i == 70 || i == 100 )
-        	{
-        		
-        	}
-        	else continue;
-        	*/
 			daysBeforeExpiryArray[i-1].setRange(); // Calculate the spread between predictions
 			if (daysBeforeExpiryArray[i-1].getModTotal() > mod)
 			{
@@ -494,24 +490,26 @@ public class StatsCollector {
 		
 		for (int i = 1; i <= maxNumberOfDaysBeforeExpiry ; i++)
 		{
-			/*
-        	if (i > 100) continue;
-        	if (i < 10)
-        	{
-        		
-        	}
-        	else
-        	if (i == 20 || i == 40 || i == 70 || i == 100 )
-        	{
-        		
-        	}
-        	else continue;*/
-			if (daysBeforeExpiryArray[i-1].getModTotal() >= mod -1  )
+			if (daysBeforeExpiryArray[i-1].getModTotal() == 0) continue;
+			if (markType == 0)
 			{
-				System.out.println("Probabilities for " + i + " days before expiry" );
-				StatsCollector.displayProbabilities(i);
+				if (daysBeforeExpiryArray[i-1].getModTotal() >= mod -1  )
+				{
+					System.out.println("Probabilities for " + i + " days before expiry" );
+					StatsCollector.displayProbabilities(i);
         	
-				System.out.println("Total sample size " + StatsCollector.getTotalForAllEntries(i));
+					System.out.println("Total sample size " + StatsCollector.getTotalForAllEntries(i));
+				}
+			}
+			else
+			{
+				if (daysBeforeExpiryArray[i-1].getModTotal() >= mod -15  )
+				{
+					System.out.println("Probabilities for " + i + " days before expiry" );
+					StatsCollector.displayProbabilities(i);
+        	
+					System.out.println("Total sample size " + StatsCollector.getTotalForAllEntries(i));
+				}
 			}
 		}
     }
@@ -831,10 +829,10 @@ public class StatsCollector {
 					}
 				}
 				
-
-				if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() > 0)
+				
+				if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() > 0 && markType == 0)
 				{
-					if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() < (float)History.days.get(i).getNumberOfDaysSinceMA50Cross()*0.8)
+					if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() < (float)History.days.get(i).getNumberOfDaysSinceMA50Cross()*numberOfDaysSinceMA50CrossStart/100)
 					{
 						daysSelection[i] = 1;
 					}
@@ -890,6 +888,7 @@ public class StatsCollector {
 				
 				if (daysSelection[i] == 1)
 				{
+					sampleSize++; // The bigger the sample size the better is the prediction
 					/*
 					System.out.println(History.days.get(i).getStringDate());
 					System.out.println(History.days.get(i).getClose() + " MA " + History.days.get(i).getWeeklyMA());
@@ -936,6 +935,17 @@ public class StatsCollector {
     		return true;
         else
             return false;
+    }
+    
+    public static int getSampleSize()
+    {
+
+    	return sampleSize;
+    }
+    
+    public static void setMarkType(int mt)
+    {
+    	markType = mt;
     }
 
 }
