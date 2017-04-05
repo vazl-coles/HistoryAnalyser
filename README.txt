@@ -32,3 +32,6 @@ These files were created to automate the process of downloading data. They are u
 Another class that can be activated is StatsAnalyser which will calculate probabilities for current day only:
 
 java -cp target/HistoryAnalyser-1.0-jar-with-dependencies.jar com.vadim.StatsAnalyser
+
+Run DecisionMaker as follows:
+java -cp target/HistoryAnalyser-1.0-jar-with-dependencies.jar com.vadim.DecisionTaker

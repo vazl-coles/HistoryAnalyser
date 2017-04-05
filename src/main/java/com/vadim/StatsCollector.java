@@ -483,8 +483,9 @@ public class StatsCollector {
 			if (daysBeforeExpiryArray[i-1].getModTotal() > mod)
 			{
 				mod = daysBeforeExpiryArray[i-1].getModTotal(); // Find most interesting predictions
-				System.out.println("mod="+mod+ " total " + daysBeforeExpiryArray[i-1].getModTotal());
+				//System.out.println("mod="+mod+ " total " + daysBeforeExpiryArray[i-1].getModTotal());
 			}
+			
 			//daysBeforeExpiryArray[i-1].displayAll();
 		}
 		
@@ -514,6 +515,35 @@ public class StatsCollector {
 		}
     }
     
+    public static void findMostSpreadOutDays()
+    {
+    	int range=0;
+    	
+		for (int i = 1; i <= maxNumberOfDaysBeforeExpiry ; i++)
+		{
+			if (daysBeforeExpiryArray[i-1].getRange() > range)
+			{
+				range = daysBeforeExpiryArray[i-1].getRange(); // Find most interesting predictions
+				//System.out.println("mod="+mod+ " total " + daysBeforeExpiryArray[i-1].getModTotal());
+			}
+			
+			//daysBeforeExpiryArray[i-1].displayAll();
+		}
+		
+		for (int i = 1; i <= maxNumberOfDaysBeforeExpiry ; i++)
+		{
+			if (daysBeforeExpiryArray[i-1].getRange() == 0) continue;
+
+			if (daysBeforeExpiryArray[i-1].getRange() >= range -1  )
+			{
+				System.out.println("Probabilities for " + i + " days before expiry" );
+				StatsCollector.displayProbabilities(i);
+        	
+				System.out.println("Total sample size " + StatsCollector.getTotalForAllEntries(i));
+			}
+
+		}
+    }
     
 	public static int getMaxNumberOfDaysBeforeExpiry()
 	{
@@ -829,61 +859,25 @@ public class StatsCollector {
 					}
 				}
 				
-				
-				if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() > 0 && markType == 0)
+				if (PropertyHelper.getProperty("statsNumberOfDaysSinceMA50Cross").contains("Y") )
 				{
-					if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() < (float)History.days.get(i).getNumberOfDaysSinceMA50Cross()*numberOfDaysSinceMA50CrossStart/100)
-					{
-						daysSelection[i] = 1;
-					}
-					else
-					{
-	                    // not interested in this day
-						daysSelection[i] = 0;
-						continue;
-					}
 
-					/*
-					//System.out.println(History.days.get(i).getStringDate() + " " + History.days.get(i).getNumberOfDaysSinceMA50Cross());
-					//System.out.println(History.days.get(lastDay-1).getStringDate() + " " + History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross());
-					
-					if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() >= 80 &&
-						History.days.get(i).getNumberOfDaysSinceMA50Cross() < 80)
+					if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() > 0 && markType == 0)
 					{
-		                    // not interested in this day
+						if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() < (float)History.days.get(i).getNumberOfDaysSinceMA50Cross()*numberOfDaysSinceMA50CrossStart/100)
+						{
+							daysSelection[i] = 1;
+						}
+						else
+						{
+							// not interested in this day
 							daysSelection[i] = 0;
 							continue;
-					}				
-					else if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() >= 80 &&
-						    History.days.get(i).getNumberOfDaysSinceMA50Cross() >= 80)
-					{
-						daysSelection[i] = 1;
+						}
 					}
-					else if (History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() < 80 &&
-							History.days.get(i).getNumberOfDaysSinceMA50Cross() < 80)
-					{
-						daysSelection[i] = 1;
-					}
-					else
-					{
-	                    // not interested in this day
-						daysSelection[i] = 0;
-						continue;
-					}
-					*/
-					
+
+	
 				}
-					/*
-					if (History.days.get(i).getNumberOfDaysSinceMA50Cross() > History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() * 1.2 ||
-						History.days.get(i).getNumberOfDaysSinceMA50Cross() < History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross() * 0.8)
-					{
-	                    // not interested in this day
-						daysSelection[i] = 0;
-						continue;
-					}
-					else
-						daysSelection[i] = 1;
-					*/
 
 				
 				if (daysSelection[i] == 1)

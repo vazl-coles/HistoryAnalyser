@@ -28,5 +28,11 @@ public class PropertyHelper {
     	return prop.getProperty(key);
     	
     }
+    
+    public static void  setProperty(String key, String keyValue)
+    {
+    	prop.setProperty(key, keyValue);
+    	
+    }
 
 }
