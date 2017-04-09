@@ -268,6 +268,20 @@ public class StatsCollector {
 		{
 			if (PropertyHelper.getProperty("statsAboveBelowMA200").contains("Y") )
 			{
+				/*
+				if (History.days.get(i).getClose() > History.days.get(i).getWeeklyMA()
+					&& History.days.get(i-1).getClose() < History.days.get(i-1).getWeeklyMA())
+				{
+					System.out.println("Moved from bear to bull on " + History.days.get(i-1).getStringDate());
+				}
+				
+				if (History.days.get(i).getClose() < History.days.get(i).getWeeklyMA()
+					&& History.days.get(i-1).getClose() > History.days.get(i-1).getWeeklyMA())
+				{
+					System.out.println("Moved from bull to bear on " + History.days.get(i-1).getStringDate());
+				}
+				*/
+
 				if (History.days.get(History.days.size()-1).getClose() > History.days.get(History.days.size()-1).getWeeklyMA())
 				{
 					// todays close is above MA
@@ -565,6 +579,19 @@ public class StatsCollector {
 					System.out.println(History.days.get(lastDay-1).getClose() + " " + History.days.get(lastDay-1).getWeeklyMA());
 					System.out.println(History.days.get(lastDay-1).getStringDate());
 					*/
+					if (i > 0)
+					{
+						if (History.days.get(i).getClose() > History.days.get(i).getWeeklyMA() && History.days.get(i-1).getClose() < History.days.get(i-1).getWeeklyMA())
+						{
+							System.out.println("Moved from bear to bull on " + History.days.get(i-1).getStringDate());
+						}
+						
+						if (History.days.get(i).getClose() < History.days.get(i).getWeeklyMA() && History.days.get(i-1).getClose() > History.days.get(i-1).getWeeklyMA())
+						{
+							System.out.println("Moved from bull to bear on " + History.days.get(i-1).getStringDate());
+						}
+					}
+						
 					if (History.days.get(lastDay-1).getClose() > History.days.get(lastDay-1).getWeeklyMA())
 					{
 						// todays close is below MA
