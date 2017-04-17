@@ -21,6 +21,7 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	private float weeklyMA;
 	private float ma50;
 	private int numberOfDaysSinceMA50Cross;
+	private String marketPhase;
 
 	
 	public DailyActivity(String date, String open, String high, String low, String close, String volume, String vix)
@@ -237,6 +238,17 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	{
 		return this.numberOfDaysSinceMA50Cross;
 	}
+	
+	public void setMarketPhase(String marketPhase)
+	{
+		this.marketPhase = marketPhase;
+	}
+	
+	public String getMarketPhase()
+	{
+		return this.marketPhase;
+	}
+	
 	
 	// Overriding the compare method to sort by date 
 	public int compare(DailyActivity d, DailyActivity d1) 

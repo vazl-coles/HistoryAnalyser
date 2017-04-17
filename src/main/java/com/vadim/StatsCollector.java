@@ -571,6 +571,21 @@ public class StatsCollector {
 		{
 			if (i < lastDay - 1)
             {
+				// Mark days which belong to similar phase of the market, i.e. bull, bear, trendless
+				if (PropertyHelper.getProperty("statsMarketPhases").contains("Y") )
+				{
+					// VIX should indicate the calmness of the market
+					// todays close is above MA
+					if (History.days.get(i).getMarketPhase().equals(History.days.get(lastDay-1).getMarketPhase()))
+					{
+                        // not interested in this day
+						daysSelection[i] = 1;
+						continue;
+					}
+					else
+						daysSelection[i] = 0;
+				}
+				
                 // Check only days before this one
 				if (PropertyHelper.getProperty("statsAboveBelowMA200").contains("Y") )
 				{
@@ -579,6 +594,7 @@ public class StatsCollector {
 					System.out.println(History.days.get(lastDay-1).getClose() + " " + History.days.get(lastDay-1).getWeeklyMA());
 					System.out.println(History.days.get(lastDay-1).getStringDate());
 					*/
+					/*
 					if (i > 0)
 					{
 						if (History.days.get(i).getClose() > History.days.get(i).getWeeklyMA() && History.days.get(i-1).getClose() < History.days.get(i-1).getWeeklyMA())
@@ -593,6 +609,7 @@ public class StatsCollector {
 							System.out.println(History.days.get(i).getClose() + " " + History.days.get(i).getWeeklyMA());
 						}
 					}
+					*/
 						
 					if (History.days.get(lastDay-1).getClose() > History.days.get(lastDay-1).getWeeklyMA())
 					{
