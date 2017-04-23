@@ -215,7 +215,7 @@ public class History {
 							if((History.days.get(i).getWeeklyMA() - History.days.get(i-80).getWeeklyMA()) < (History.days.get(i- 80).getWeeklyMA() - History.days.get(i-160).getWeeklyMA()))
 							{
 								//System.out.println("trendless from bull Todays ma " + History.days.get(i).getWeeklyMA() + " ma-80 " + History.days.get(i-80).getWeeklyMA() + " ma-160 " + History.days.get(i-160).getWeeklyMA() );
-								days.get(i).setMarketPhase("needsMoreBuyers");
+								days.get(i).setMarketPhase("trendless");
 								System.out.println(History.days.get(i).getStringDate() + " Phase " + days.get(i).getMarketPhase());
 								//System.out.println("Moved from trendless to bear " + History.days.get(i).getStringDate());
 								//System.out.println(History.days.get(i).getClose() + " Todays ma " + History.days.get(i).getWeeklyMA() + " Yesterdays ma " + History.days.get(i-1).getWeeklyMA() + " day before " + History.days.get(i-2).getWeeklyMA() );
@@ -230,7 +230,7 @@ public class History {
 						{
 							if((History.days.get(i-40).getWeeklyMA() - History.days.get(i).getWeeklyMA()) < (History.days.get(i- 80).getWeeklyMA() - History.days.get(i-40).getWeeklyMA()))
 							{
-								days.get(i).setMarketPhase("hopeful");
+								days.get(i).setMarketPhase("trendless");
 								System.out.println(History.days.get(i).getStringDate() + " Phase " + days.get(i).getMarketPhase());
 								//System.out.println("Moved from trendless to bear " + History.days.get(i).getStringDate());
 								//System.out.println(History.days.get(i).getClose() + " Todays ma " + History.days.get(i).getWeeklyMA() + " Yesterdays ma " + History.days.get(i-1).getWeeklyMA() + " day before " + History.days.get(i-2).getWeeklyMA() );
@@ -256,7 +256,7 @@ public class History {
 								}
 								else
 								{
-									days.get(i).setMarketPhase("needsMoreBuyers");
+									days.get(i).setMarketPhase("trendless");
 								}
 							}
 							else
@@ -268,7 +268,7 @@ public class History {
 								}
 								else
 								{
-									days.get(i).setMarketPhase("hopeful");
+									days.get(i).setMarketPhase("trendless");
 								}
 							}
 							/*
@@ -333,6 +333,7 @@ public class History {
 						}
 						
 						*/
+						/*
 						if (days.get(i).getMarketPhase().equals("bull"))
 						{
 		    	        	if (ma50 > resistance)
@@ -352,7 +353,7 @@ public class History {
 		    	        	if (ma50 < support || support < 10)
 		    	        		support = ma50;		    	        	
 						}
-	    	        	
+	    	        	*/
 	    	        	//System.out.println(days.get(i).getStringDate() + " Resistance=" + resistance + " Support =" + support);
 						
 					}
