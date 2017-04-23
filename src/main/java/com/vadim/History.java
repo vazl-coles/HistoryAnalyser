@@ -144,7 +144,7 @@ public class History {
     	        	*/
     	        	//weeklyMA = calculateMA("Weekly", "Close", numberOfWeeks, weekNumber);
     	        	// weeklyMA = calculateMA("Weekly", "Close", numberOfWeeks, i);
-    	        	weeklyMA = calculateMA("Daily", "Close", 600, i);
+    	        	weeklyMA = calculateMA("Daily", "Close", 300, i);
     	        	days.get(i).setWeeklyMA(weeklyMA);
     	        	
     	        	
@@ -239,6 +239,12 @@ public class History {
 						}
 						else if (days.get(i-1).getMarketPhase().equals("needsMoreBuyers"))
 						{
+							if (checkIfMADroppedMoreThan1Percent(200, i))
+							{
+								days.get(i).setMarketPhase("bear");
+								System.out.println(History.days.get(i).getStringDate() + " Phase " + days.get(i).getMarketPhase());
+							}
+							else
 							if (days.get(i).getWeeklyMA() < days.get(i-1).getWeeklyMA())
 							{
 								if (days.get(i).getMA50() < days.get(i).getWeeklyMA())
@@ -584,6 +590,23 @@ public class History {
 		
 		return support;
 		
+	}
+	
+	private static boolean checkIfMADroppedMoreThan1Percent(int numOfEntries, int lastEntry)
+	{
+		int i=0;
+		float support=0;
+		boolean debug=false;
+		
+		for (i = lastEntry; i > lastEntry - numOfEntries; i-- )
+		{
+			if ( i < 0) break;
+
+			if (days.get(lastEntry).getWeeklyMA() < days.get(i).getWeeklyMA()*0.99)
+				return true;
+		}
+		
+		return false;
 	}
 
 }
