@@ -248,7 +248,7 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	
 	public float getResistance()
 	{
-		return this.support;
+		return this.resistance;
 	}
 	
 	public String getResistanceString()
