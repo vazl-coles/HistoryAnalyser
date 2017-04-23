@@ -144,7 +144,7 @@ public class History {
     	        	*/
     	        	//weeklyMA = calculateMA("Weekly", "Close", numberOfWeeks, weekNumber);
     	        	// weeklyMA = calculateMA("Weekly", "Close", numberOfWeeks, i);
-    	        	weeklyMA = calculateMA("Daily", "Close", 250, i);
+    	        	weeklyMA = calculateMA("Daily", "Close", 600, i);
     	        	days.get(i).setWeeklyMA(weeklyMA);
     	        	
     	        	
@@ -191,16 +191,17 @@ public class History {
     	        	
     	        	days.get(i).setResistance(resistance);
     	        	
-    	        	support = calculateSupport(100,i );
+    	        	support = calculateSupport(400,i );
     	        	
     	        	days.get(i).setSupport(support);
     	        	
-    	        	/*
-    	        	if (History.days.get(i).getClose() > History.days.get(i).getResistance())
-    	        	{
-    	        		System.out.println("Unusual " + History.days.get(i).getStringDate() + " Close=" + History.days.get(i).getClose() + " Resistance=" + History.days.get(i).getResistance());
-    	        	}
-    	        	*/
+    	        	if (i > 700)
+    	        		if (History.days.get(i).getWeeklyMA() >= History.days.get(i-1).getWeeklyMA() )
+    	        		{
+    	        			if (History.days.get(i-1).getWeeklyMA() <= History.days.get(i-2).getWeeklyMA() )
+    	        			System.out.println("Unusual " + History.days.get(i).getStringDate() + " Today=" + History.days.get(i).getWeeklyMA() + " Yest=" + History.days.get(i-1).getWeeklyMA() + " Before=" + History.days.get(i-2).getWeeklyMA());
+    	        		}
+    	        	
     	        	
     	        	days.get(i).setMarketPhase("initial");
 					if (i > 500)
@@ -240,8 +241,21 @@ public class History {
 						{
 							if (days.get(i).getWeeklyMA() < days.get(i-1).getWeeklyMA())
 							{
-								days.get(i).setMarketPhase("bear");
-								System.out.println(History.days.get(i).getStringDate() + " Phase " + days.get(i).getMarketPhase());
+								if (days.get(i).getMA50() < days.get(i).getWeeklyMA())
+								{
+									if (History.days.get(i).getClose() < History.days.get(i).getSupport())
+									{
+										days.get(i).setMarketPhase("bear");
+										System.out.println(History.days.get(i).getStringDate() + " Phase " + days.get(i).getMarketPhase());
+										System.out.println("Close " + days.get(i).getClose() + " Support=" + History.days.get(i).getSupport());
+									}
+									else
+										days.get(i).setMarketPhase("needsMoreBuyers");
+								}
+								else
+								{
+									days.get(i).setMarketPhase("needsMoreBuyers");
+								}
 							}
 							else if (History.days.get(i).getClose() > History.days.get(i).getResistance())
 							{
@@ -250,16 +264,8 @@ public class History {
 							}
 							else if (days.get(i).getWeeklyMA() > days.get(i-80).getWeeklyMA())
 							{
-								if((History.days.get(i).getWeeklyMA() - History.days.get(i-80).getWeeklyMA()) > (History.days.get(i- 80).getWeeklyMA() - History.days.get(i-160).getWeeklyMA()))
-								{
-									//System.out.println("bull from trendless Todays ma " + History.days.get(i).getWeeklyMA() + " ma-80 " + History.days.get(i-80).getWeeklyMA() + " ma-160 " + History.days.get(i-160).getWeeklyMA() );
-									days.get(i).setMarketPhase("bull");
-									System.out.println(History.days.get(i).getStringDate() + " Phase " + days.get(i).getMarketPhase());
-								}
-								else
-								{
-									days.get(i).setMarketPhase("needsMoreBuyers");
-								}
+
+								days.get(i).setMarketPhase("needsMoreBuyers");
 							}
 							else
 							{
@@ -270,20 +276,22 @@ public class History {
 						{
 							if (days.get(i).getWeeklyMA() > days.get(i-1).getWeeklyMA())
 							{
-								days.get(i).setMarketPhase("bull");
-								System.out.println(History.days.get(i).getStringDate() + " Phase " + days.get(i).getMarketPhase());
-							}
-							else
-							{
-								if((History.days.get(i-40).getWeeklyMA() - History.days.get(i).getWeeklyMA()) > (History.days.get(i- 80).getWeeklyMA() - History.days.get(i-40).getWeeklyMA()))
+								if (days.get(i).getMA50() > days.get(i).getWeeklyMA())
 								{
-									days.get(i).setMarketPhase("bear");
+									days.get(i).setMarketPhase("bull");
 									System.out.println(History.days.get(i).getStringDate() + " Phase " + days.get(i).getMarketPhase());
 								}
 								else
-								{
 									days.get(i).setMarketPhase("hopeful");
-								}
+							}
+							else if (History.days.get(i).getClose() < History.days.get(i).getSupport())
+							{
+								days.get(i).setMarketPhase("bear");
+								System.out.println(History.days.get(i).getStringDate() + " Phase " + days.get(i).getMarketPhase() + " Close= " + History.days.get(i).getClose() + " Resistance=" + History.days.get(i-1).getResistance());
+							}
+							else
+							{
+								days.get(i).setMarketPhase("hopeful");
 							}
 						}
 						else // initial
@@ -565,7 +573,7 @@ public class History {
 		float support=0;
 		boolean debug=false;
 		
-		for (i = lastEntry; i > lastEntry - numOfEntries; i-- )
+		for (i = lastEntry-1; i > lastEntry - numOfEntries; i-- )
 		{
 			if ( i < 0) break;
 			if (support == 0)
