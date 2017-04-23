@@ -20,6 +20,8 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	private float vix;
 	private float weeklyMA;
 	private float ma50;
+	private float support;
+	private float resistance;
 	private int numberOfDaysSinceMA50Cross;
 	private String marketPhase;
 
@@ -214,6 +216,16 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 		this.ma50 = ma50;
 	}
 	
+	public void setSupport(float support)
+	{
+		this.support = support;
+	}
+	
+	public void setResistance(float resistance)
+	{
+		this.resistance = resistance;
+	}
+	
 	public String getMA50String()
 	{
 		return String.valueOf(this.ma50);
@@ -222,6 +234,26 @@ public class DailyActivity implements /*Comparator<DailyActivity> ,*/ Comparable
 	public float getMA50()
 	{
 		return this.ma50;
+	}
+	
+	public float getSupport()
+	{
+		return this.support;
+	}
+	
+	public String getSupportString()
+	{
+		return String.valueOf(this.support);
+	}
+	
+	public float getResistance()
+	{
+		return this.support;
+	}
+	
+	public String getResistanceString()
+	{
+		return String.valueOf(this.resistance);
 	}
 	
 	public void setNumberOfDaysSinceMA50Cross(int numberOfDaysSinceMA50Cross)
