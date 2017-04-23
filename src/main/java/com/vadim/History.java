@@ -247,6 +247,7 @@ public class History {
 							else
 							if (days.get(i).getWeeklyMA() < days.get(i-1).getWeeklyMA())
 							{
+								/*
 								if (days.get(i).getMA50() < days.get(i).getWeeklyMA())
 								{
 									if (History.days.get(i).getClose() < History.days.get(i).getSupport())
@@ -262,6 +263,9 @@ public class History {
 								{
 									days.get(i).setMarketPhase("needsMoreBuyers");
 								}
+								*/
+								days.get(i).setMarketPhase("needsMoreBuyers");
+								
 							}
 							else if (History.days.get(i).getClose() > History.days.get(i).getResistance())
 							{
@@ -602,6 +606,7 @@ public class History {
 		{
 			if ( i < 0) break;
 
+			// Check if weekly ma dropped 0.5% or 1% in order to confirm that bear market started
 			if (days.get(lastEntry).getWeeklyMA() < days.get(i).getWeeklyMA()*0.99)
 				return true;
 		}
