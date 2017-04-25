@@ -348,10 +348,10 @@ public class StatsCollector {
                {
             	   priceDiff = History.days.get(i+daysBeforeExpiry).getClose() - History.days.get(i).getClose();
             	   roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
-            	   if (roundedPercentageDiff > 15)
+            	   if (roundedPercentageDiff > 5 && daysBeforeExpiry < 2)
             	   {
-            		   //System.out.println("Jump " + History.days.get(i+daysBeforeExpiry).getClose() + " " + History.days.get(i+daysBeforeExpiry).getStringDate() );
-            		   //System.out.println("From " + History.days.get(i).getClose() + " " + History.days.get(i).getStringDate() );
+            		   System.out.println("Jump " + History.days.get(i+daysBeforeExpiry).getClose() + " " + History.days.get(i+daysBeforeExpiry).getStringDate() );
+            		   System.out.println("From " + History.days.get(i).getClose() + " " + History.days.get(i).getStringDate() );
             	   }
             	   daysBeforeExpiryArray[daysBeforeExpiry-1].updateStatsEntry(roundedPercentageDiff);
                }
@@ -567,6 +567,9 @@ public class StatsCollector {
     public static void markDaysOfInterest(int lastDay)
     {
 		daysSelection = new int[History.days.size()];
+		System.out.println("Last day= " + lastDay);
+		if (lastDay > 0)
+			System.out.println("Calculating probabilities for " + History.days.get(lastDay-1).getMarketPhase());
 		for (int i = 0; i < History.days.size() -1; i++)
 		{
 			if (i < lastDay - 1)
@@ -574,21 +577,25 @@ public class StatsCollector {
 				// Mark days which belong to similar phase of the market, i.e. bull, bear, trendless
 				if (PropertyHelper.getProperty("statsMarketPhases").contains("Y") )
 				{
+					//System.out.println("statsMarketPhases");
 					// VIX should indicate the calmness of the market
 					// todays close is above MA
 					if (History.days.get(i).getMarketPhase().equals(History.days.get(lastDay-1).getMarketPhase()))
 					{
                         // not interested in this day
 						daysSelection[i] = 1;
-						continue;
 					}
 					else
+					{
 						daysSelection[i] = 0;
+						continue;
+					}
 				}
 				
                 // Check only days before this one
 				if (PropertyHelper.getProperty("statsAboveBelowMA200").contains("Y") )
 				{
+					//System.out.println("statsAboveBelowMA200");
 					// Basic test whether we are in the bull market or not
 					/*
 					System.out.println(History.days.get(lastDay-1).getClose() + " " + History.days.get(lastDay-1).getWeeklyMA());
@@ -781,6 +788,7 @@ public class StatsCollector {
 				
 				if (PropertyHelper.getProperty("statsAfter1UpOrDownDay").contains("Y") )
 				{
+					//System.out.println("statsAfter1UpOrDownDay");
 					if (i < 10)
 					{
                         // not interested in this day
@@ -793,6 +801,7 @@ public class StatsCollector {
 						if (History.days.get(i).getClose() < History.days.get(i-1).getClose())
 						{
 	                        // not interested in this day
+							//System.out.println("Not interested in this day");
 							daysSelection[i] = 0;
 							continue;
 						}
@@ -857,6 +866,19 @@ public class StatsCollector {
 						continue;
 						
 					}
+				}
+				*/
+				
+				/*
+				if (RoseThreeDaysInARow(lastDay-1) && History.days.get(lastDay-1).getMarketPhase().equals("bull") )
+				{
+					if (i < 10)
+					{
+                        // not interested in this day
+						daysSelection[i] = 0;
+						continue;
+					}
+					daysSelection[i] = 1;
 				}
 				*/
 				
@@ -942,6 +964,32 @@ public class StatsCollector {
                   daysSelection[i] = 0;
            }
 		}    
+    }
+    
+    public static void findBestDescriptionOfToday()
+    {
+    	int lastDay=History.days.size()-1 ;
+    	ShareState[] characteristics = new ShareState[2];
+    	
+    	// The first characteristic of a day is a phase, such as bull, bear,...
+    	characteristics[0] = new SharePhase(History.days.get(lastDay).getMarketPhase());
+    	// Another characteristic of a day is whether close is above long term moving average
+		if (History.days.get(lastDay).getClose() > History.days.get(lastDay).getWeeklyMA())
+		{
+			characteristics[1] = new ShareAboveLongTermMA(true);
+		}
+		else
+			characteristics[1] = new ShareAboveLongTermMA(false);
+		findNumberOfSimilarDays(characteristics);
+
+    }
+    
+    public static void findNumberOfSimilarDays(ShareState[] characteristics)
+    {
+    	for (int i=0; i < characteristics.length; i++)
+    	{
+    		characteristics[i].markDays();
+    	}
     }
    
     public static boolean RoseThreeDaysInARow(int i)

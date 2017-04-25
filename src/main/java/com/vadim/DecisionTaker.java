@@ -35,15 +35,16 @@ public class DecisionTaker {
     	// Use different criteria to mark similar days in the past
     	// Collect the results in the list and display most interesting ones, i.e. marked days are not spread out
     	
-    	PropertyHelper.setProperty("statsAboveBelowMA200", "Y");
-    	PropertyHelper.setProperty("statsSimilarVIX", "Y");
-    	PropertyHelper.setProperty("statsSimilarMA50", "Y");
+    	/*
+    	PropertyHelper.setProperty("statsAboveBelowMA200", "N");
+    	PropertyHelper.setProperty("statsSimilarVIX", "N");
+    	PropertyHelper.setProperty("statsSimilarMA50", "N");
     	PropertyHelper.setProperty("statsSimilarWeek", "N");
     	PropertyHelper.setProperty("statsSimilarMonth", "N");
-    	PropertyHelper.setProperty("statsSimilarMA50Trend", "Y");
+    	PropertyHelper.setProperty("statsSimilarMA50Trend", "N");
     	PropertyHelper.setProperty("statsAfter1UpOrDownDay", "N");
     	PropertyHelper.setProperty("statsAfter3UpOrDownDays", "N");
-    	
+    	*/
 		// Accumulate stats for a number of days before expiry
 		StatsCollector.init(); // Will mark all days in the past which look similar, e.g. above MA. These are days of interest
         for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= StatsCollector.getMaxNumberOfDaysBeforeExpiry(); daysBeforeExpiry++)
@@ -52,7 +53,9 @@ public class DecisionTaker {
         	StatsCollector.updateStatsForToday(daysBeforeExpiry);
         }
         StatsCollector.findMostLikelyDays();
-        StatsCollector.findMostSpreadOutDays();
+        //StatsCollector.findMostSpreadOutDays();
+        
+        StatsCollector.findBestDescriptionOfToday();
     	
         /*
     	int scanNum=1;
