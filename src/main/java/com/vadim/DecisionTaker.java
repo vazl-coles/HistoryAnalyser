@@ -56,6 +56,13 @@ public class DecisionTaker {
         //StatsCollector.findMostSpreadOutDays();
         
         StatsCollector.findBestDescriptionOfToday();
+        
+        for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= StatsCollector.getMaxNumberOfDaysBeforeExpiry(); daysBeforeExpiry++)
+        {
+        	// Find probabilities from the past days that were marked earlier
+        	StatsCollector.updateStatsForToday(daysBeforeExpiry);
+        }
+        StatsCollector.findMostLikelyDays();
     	
         /*
     	int scanNum=1;

@@ -12,6 +12,9 @@ class StatsPerDay {
 	
 	StatsPerDay()
 	{
+		totalForAllEntries=0;
+		modForAllEntries=0;
+		range=0;
 		for (int i = 0; i < 50; i++)
 		{
 			statsEntries[i] = new StatsEntry();
@@ -971,8 +974,18 @@ public class StatsCollector {
     	int lastDay=History.days.size()-1 ;
     	ShareState[] characteristics = new ShareState[2];
     	
+		maxNumberOfDaysBeforeExpiry= 300;
+		sampleSize = 0;
+		daysBeforeExpiryArray = new StatsPerDay[maxNumberOfDaysBeforeExpiry];
+		for (int i = 1; i <= maxNumberOfDaysBeforeExpiry ; i++)
+		{
+			daysBeforeExpiryArray[i-1] = new StatsPerDay();
+			//daysBeforeExpiryArray[i-1].displayAll();
+		}
+    	
     	// The first characteristic of a day is a phase, such as bull, bear,...
     	characteristics[0] = new SharePhase(History.days.get(lastDay).getMarketPhase());
+    	
     	// Another characteristic of a day is whether close is above long term moving average
 		if (History.days.get(lastDay).getClose() > History.days.get(lastDay).getWeeklyMA())
 		{
@@ -986,12 +999,66 @@ public class StatsCollector {
     
     public static void findNumberOfSimilarDays(ShareState[] characteristics)
     {
+    	System.out.println("Total days = " + History.days.size());
+    	daysSelection = new int[History.days.size()-1];
     	for (int i=0; i < characteristics.length; i++)
     	{
     		characteristics[i].markDays();
+    		System.out.println("Total days found after " + i + " " + sampleSize);
     	}
+    	System.out.println("Total days found= " + sampleSize);
     }
    
+    public static void markSimilarPhase(int lastDay)
+    {
+		//System.out.println("Last day= " + lastDay);
+		//if (lastDay > 0)
+			//System.out.println("Marking days for " + History.days.get(lastDay-1).getMarketPhase() + " phase");
+		for (int i = 0; i < History.days.size() -1; i++)
+		{
+			if (i < lastDay - 1)
+            {
+				// Mark days which belong to similar phase of the market, i.e. bull, bear, trendless
+				// VIX should indicate the calmness of the market
+				// todays close is above MA
+				if (History.days.get(i).getMarketPhase().equals(History.days.get(lastDay-1).getMarketPhase()))
+				{
+                    // not interested in this day
+					daysSelection[i] = 1;
+					sampleSize++;
+				}
+				else
+				{
+					daysSelection[i] = -1;
+					
+				}
+            }
+		}
+    }
+    
+    public static void markSimilarDaysAboveLongTermMA(int lastDay)
+    {
+		//System.out.println("Last day= " + lastDay);
+		//if (lastDay > 0)
+			//System.out.println("Marking days above Long Term MA ");
+		for (int i = 0; i < History.days.size() -1; i++)
+		{
+			if (i < lastDay - 1 && daysSelection[i] != -1)
+            {
+				// Mark days which are above long term MA
+				if (History.days.get(i).getClose() > History.days.get(i).getWeeklyMA())
+				{
+                    daysSelection[i] = 1;
+				}
+				else
+				{
+					daysSelection[i] = -1;
+					sampleSize--;
+				}
+            }
+		}
+    }
+    
     public static boolean RoseThreeDaysInARow(int i)
     {
     	/*

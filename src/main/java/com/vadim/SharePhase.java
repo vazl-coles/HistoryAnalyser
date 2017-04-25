@@ -13,6 +13,7 @@ public class SharePhase implements ShareState{
     {
        System.out.println("Finding days for the current phase ...");
        // go through history and mark days with the same phase
+       StatsCollector.markSimilarPhase(History.days.size());
     }
     
     public void setEssentialState(boolean essential)

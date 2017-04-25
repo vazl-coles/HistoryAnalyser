@@ -12,8 +12,16 @@ public class ShareAboveLongTermMA implements ShareState {
 	
     public void markDays() 
     {
-       System.out.println("Finding days above long term MA ...");
-       // go through history and mark days with the same phase
+    	if (above)
+    	{
+    		System.out.println("Finding days above long term MA ...");
+    		StatsCollector.markSimilarDaysAboveLongTermMA(History.days.size());
+    	}
+    	else
+    	{
+    		System.out.println("Not looking for days above long term MA ...");
+    	}
+
     }
     
     public void setEssentialState(boolean essential)
