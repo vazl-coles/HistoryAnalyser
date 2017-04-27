@@ -351,7 +351,7 @@ public class StatsCollector {
                {
             	   priceDiff = History.days.get(i+daysBeforeExpiry).getClose() - History.days.get(i).getClose();
             	   roundedPercentageDiff = Math.round(priceDiff/History.days.get(i).getClose()*100);
-            	   if (roundedPercentageDiff > 5 && daysBeforeExpiry < 2)
+            	   if (Math.abs(roundedPercentageDiff) > 5 && daysBeforeExpiry < 2)
             	   {
             		   System.out.println("Jump " + History.days.get(i+daysBeforeExpiry).getClose() + " " + History.days.get(i+daysBeforeExpiry).getStringDate() );
             		   System.out.println("From " + History.days.get(i).getClose() + " " + History.days.get(i).getStringDate() );
@@ -972,7 +972,7 @@ public class StatsCollector {
     public static void findBestDescriptionOfToday()
     {
     	int lastDay=History.days.size()-1 ;
-    	ShareState[] characteristics = new ShareState[2];
+    	ShareState[] characteristics = new ShareState[4];
     	
 		maxNumberOfDaysBeforeExpiry= 300;
 		sampleSize = 0;
@@ -991,8 +991,16 @@ public class StatsCollector {
 		{
 			characteristics[1] = new ShareAboveLongTermMA(true);
 		}
-		else
-			characteristics[1] = new ShareAboveLongTermMA(false);
+		
+    	// Another characteristic of a day is whether close is above moving average 50
+		if (History.days.get(lastDay).getClose() > History.days.get(lastDay).getWeeklyMA())
+		{
+			characteristics[2] = new ShareAboveMA50(true);
+		}
+		
+    	// Another characteristic of a day is the distance from MA50
+		characteristics[3] = new ShareSimilarDistanceFromMA(true);
+		
 		findNumberOfSimilarDays(characteristics);
 
     }
@@ -1054,6 +1062,81 @@ public class StatsCollector {
 				{
 					daysSelection[i] = -1;
 					sampleSize--;
+				}
+            }
+		}
+    }
+    
+    public static void markSimilarDaysAboveMA50(int lastDay)
+    {
+		//System.out.println("Last day= " + lastDay);
+		//if (lastDay > 0)
+			//System.out.println("Marking days above MA 50 ");
+		for (int i = 0; i < History.days.size() -1; i++)
+		{
+			if (i < lastDay - 1 && daysSelection[i] != -1)
+            {
+				// Mark days which are above long term MA
+				if (History.days.get(i).getClose() > History.days.get(i).getMA50())
+				{
+                    daysSelection[i] = 1;
+				}
+				else
+				{
+					daysSelection[i] = -1;
+					sampleSize--;
+				}
+            }
+		}
+    }
+    
+    public static void markSimilarDistanceFromMA50(int lastDay)
+    {
+    	float total=0;
+    	int numOfEntries=0;
+
+		for (int i = 0; i < History.days.size() -1; i++)
+		{
+			if (i < lastDay - 1 && daysSelection[i] != -1)
+            {
+				if (daysSelection[i] == 1)
+				{
+					total = (Math.abs(History.days.get(i).getMA50() - History.days.get(i).getClose()))/History.days.get(i).getMA50()*100 + total;
+					numOfEntries++;
+				}
+            }
+		}
+		
+		float average = total/numOfEntries;
+		float distance;
+		float currDistance = (Math.abs(History.days.get(lastDay-1).getMA50() - History.days.get(lastDay-1).getClose()))/History.days.get(lastDay-1).getMA50()*100;
+		System.out.println("current distance= " + currDistance + " average = " + average);
+		System.out.println("MA= " + History.days.get(lastDay-1).getMA50() + " close = " + History.days.get(lastDay-1).getClose());
+		
+		for (int i = 0; i < History.days.size() -1; i++)
+		{
+			if (i < lastDay - 1 && daysSelection[i] != -1)
+            {
+				if (daysSelection[i] == 1)
+				{
+					distance = Math.abs(History.days.get(i).getMA50() - History.days.get(i).getClose());
+					if (currDistance < average)
+						if (distance < average)
+							daysSelection[i] = 1;
+						else
+						{
+							daysSelection[i] = -1;
+							sampleSize--;
+						}
+					else
+						if (distance > average)
+							daysSelection[i] = 1;
+						else
+						{
+							daysSelection[i] = -1;
+							sampleSize--;
+						}
+							
 				}
             }
 		}

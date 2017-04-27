@@ -7,6 +7,7 @@ public class SharePhase implements ShareState{
 	public SharePhase(String phase)
 	{
 		this.phase = phase;
+		this.essential = true;
 	}
 	
     public void markDays() 
