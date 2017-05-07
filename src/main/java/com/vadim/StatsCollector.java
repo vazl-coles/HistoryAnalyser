@@ -2,6 +2,7 @@ package com.vadim;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.vadim.priceaction.*;
 
 class StatsPerDay {
 	
@@ -1000,18 +1001,39 @@ public class StatsCollector {
 		
     	// Another characteristic of a day is the distance from MA50
 		characteristics[3] = new ShareSimilarDistanceFromMA(true);
-		
+		daysSelection = new int[History.days.size()-1];
 		findNumberOfSimilarDays(characteristics);
+		
+		SharePriceAction[] priceAction = new SharePriceAction[2];
+    	// Another characteristic of a day is the rise of 0.5% or more in one day
+		priceAction[0] = new HalfAPercentRise();
+		
+    	// Another characteristic of a day is the rise of two days in a row
+		priceAction[1] = new RiseOfTwoDaysInARow();
+		
+		findNumberOfSimilarDays(priceAction);
 
     }
     
     public static void findNumberOfSimilarDays(ShareState[] characteristics)
     {
     	System.out.println("Total days = " + History.days.size());
-    	daysSelection = new int[History.days.size()-1];
+    	//daysSelection = new int[History.days.size()-1];
     	for (int i=0; i < characteristics.length; i++)
     	{
     		characteristics[i].markDays();
+    		System.out.println("Total days found after " + i + " " + sampleSize);
+    	}
+    	System.out.println("Total days found= " + sampleSize);
+    }
+    
+    public static void findNumberOfSimilarDays(SharePriceAction[] priceAction)
+    {
+    	System.out.println("Total days = " + History.days.size());
+    	//daysSelection = new int[History.days.size()-1];
+    	for (int i=0; i < priceAction.length; i++)
+    	{
+    		priceAction[i].markDays();
     		System.out.println("Total days found after " + i + " " + sampleSize);
     	}
     	System.out.println("Total days found= " + sampleSize);
@@ -1087,6 +1109,65 @@ public class StatsCollector {
 					sampleSize--;
 				}
             }
+		}
+    }
+    
+    public static void markSimilarDaysOfHalfAPercentRise(int lastDay)
+    {
+		//System.out.println("Last day= " + lastDay);
+		//if (lastDay > 0)
+			//System.out.println("Marking days above MA 50 ");
+    	
+    	if ((History.days.get(lastDay-1).getClose() - History.days.get(lastDay-2).getClose())/History.days.get(lastDay-1).getClose()*100 > 0.5)
+    	{
+    		for (int i = 0; i < History.days.size() -1; i++)
+    		{
+    			if (i < lastDay - 1 && daysSelection[i] != -1 && i > 0)
+    			{
+    				// Mark days which are above long term MA
+    				if ((History.days.get(i).getClose() - History.days.get(i-1).getClose())/History.days.get(i).getClose()*100 > 0.5)
+    				{
+    					daysSelection[i] = 1;
+    				}
+    				else
+    				{
+    					daysSelection[i] = -1;
+    					sampleSize--;
+    				}
+    			}
+    		}
+    	}
+    }
+    
+    public static void markSimilarDaysWithRiseOfTwoDaysInARow(int lastDay)
+    {
+		//System.out.println("Last day= " + lastDay);
+		//if (lastDay > 0)
+			//System.out.println("Marking days above MA 50 ");
+    	if (History.days.get(lastDay-1).getClose() > History.days.get(lastDay-2).getClose() && History.days.get(lastDay-2).getClose() > History.days.get(lastDay-3).getClose())
+		{
+    		for (int i = 0; i < History.days.size() -1; i++)
+    		{
+    			if (i < lastDay - 1 && daysSelection[i] != -1 && i > 10)
+    			{
+    				// Mark days which are above long term MA
+    				if (History.days.get(i).getClose() > History.days.get(i-1).getClose())
+    				{
+    					if (History.days.get(i-1).getClose() > History.days.get(i-2).getClose())
+    						daysSelection[i] = 1;
+    					else
+    					{
+    						daysSelection[i] = -1;
+    						sampleSize--;
+    					}
+    				}
+    				else
+    				{
+    					daysSelection[i] = -1;
+    					sampleSize--;
+    				}
+    			}
+    		}
 		}
     }
     
