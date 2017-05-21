@@ -36,6 +36,7 @@ public class History {
     	
         CSVReader reader = null;
         CSVReader readerVIX = null;
+        int i = 0;
                 
         try {
             reader = new CSVReader(new FileReader(csvFile));
@@ -46,8 +47,14 @@ public class History {
             while ((line = reader.readNext()) != null) {
             	if ((lineVIX = readerVIX.readNext()) != null)
             	{
-            		
+            		if (lineVIX[4].contains("null") )
+        			{
+        				System.out.println("Null string found on " + line[0]);
+        				break;
+        			}
             	}
+            	else
+            		break;
             	
             	if (line[0].contains("/") || line[0].contains("Date"))
             	{
@@ -66,7 +73,7 @@ public class History {
                 		+" , low= " + line[3]
                 		+" , close= " + line[4]
                 		+" , volume= " + line[5]);
-                		*/
+                	*/	
 				
             	if (line[1].contains("Open") || line[5].equals("0") || line[0].contains("Date"))
             	{
@@ -76,9 +83,10 @@ public class History {
             	{
             		if (line[0].equals(lineVIX[0]))
             		{
-            			//System.out.println("date= " + line[0] + " vix date " + lineVIX[0]);
+            			//System.out.println("date= " + line[0] + " vix date " + lineVIX[0] + " " + lineVIX[4]);
             			DailyActivity day = new DailyActivity(line[0], line[1], line[2], line[3], line[4], line[5], lineVIX[4]);
             			days.add(day);
+            			i++;
             		}
             		else
             		{
@@ -100,6 +108,7 @@ public class History {
             e.printStackTrace();
         }
         
+        System.out.println("Added " +  i + " days to array days");
         Collections.sort(days );
     	
     }
