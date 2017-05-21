@@ -36,7 +36,7 @@ public class History {
     	
         CSVReader reader = null;
         CSVReader readerVIX = null;
-        int i = 0;
+        int i = 0, j=0;
                 
         try {
             reader = new CSVReader(new FileReader(csvFile));
@@ -45,12 +45,13 @@ public class History {
             String[] lineVIX;
             
             while ((line = reader.readNext()) != null) {
+            	j++;
             	if ((lineVIX = readerVIX.readNext()) != null)
             	{
             		if (lineVIX[4].contains("null") )
         			{
         				System.out.println("Null string found on " + line[0]);
-        				break;
+        				continue;
         			}
             	}
             	else
@@ -73,7 +74,7 @@ public class History {
                 		+" , low= " + line[3]
                 		+" , close= " + line[4]
                 		+" , volume= " + line[5]);
-                	*/	
+                	*/
 				
             	if (line[1].contains("Open") || line[5].equals("0") || line[0].contains("Date"))
             	{
@@ -108,7 +109,7 @@ public class History {
             e.printStackTrace();
         }
         
-        System.out.println("Added " +  i + " days to array days");
+        System.out.println("Added " +  i + " days to array days out of total " + j + " read");
         Collections.sort(days );
     	
     }
