@@ -186,11 +186,13 @@ class StatsPerDay {
             {
                     if (statsEntries[i].getTotal() > 0)
                     {
-                            System.out.println("Probability of " + calculatePercentageFromSubscript(i) + "% is "+ (float)statsEntries[i].getTotal()/ (float)totalForAllEntries * (float) 100);
+                            System.out.println("Probability of " + calculatePercentageFromSubscript(i) + "% is "+ (float)statsEntries[i].getTotal()/ (float)totalForAllEntries * (float) 100 + "(subscript=" + i + ")");
                             //System.out.println("Total expiry=" + statsEntries[i].getTotal() + " for " + calculatePercentageFromSubscript(i));
                             //System.out.println("Total sample for all expiries=" + totalForAllEntries);
                     }
             }
+            
+            //System.out.println("displayProbabilities finished");
 
     }
     
@@ -261,6 +263,24 @@ public class StatsCollector {
 		}
 		
 		markDaysOfInterest(History.days.size()); // These are the days which are similar to the last day, e.g. have similar vix, above or below MA
+	}
+	
+	static void initialise()
+	{
+		maxNumberOfDaysBeforeExpiry= 300;
+		sampleSize = 0;
+		daysBeforeExpiryArray = new StatsPerDay[maxNumberOfDaysBeforeExpiry];
+		for (int i = 1; i <= maxNumberOfDaysBeforeExpiry ; i++)
+		{
+			daysBeforeExpiryArray[i-1] = new StatsPerDay();
+			//daysBeforeExpiryArray[i-1].displayAll();
+		}
+		
+		for (int i = 0; i < History.days.size()-1; i++)
+		{
+			daysSelection[i] = 0;
+		}
+
 	}
 	
 	public static void updateStats(int daysBeforeExpiry)
@@ -531,6 +551,36 @@ public class StatsCollector {
 				}
 			}
 		}
+    }
+    
+    public static void findExpiryWithLimitedUpside()
+    {
+    	int upperValue=0;
+    	int numOfDaysBeforeExpiry=0;
+    	
+    	System.out.println("Find expiry with limited upside");
+		for (int i = 1; i <= maxNumberOfDaysBeforeExpiry ; i++)
+		{
+			if (upperValue == 0)
+			{
+				upperValue = daysBeforeExpiryArray[i-1].getHighest();
+				System.out.println("Initial setting=" + upperValue);
+				numOfDaysBeforeExpiry=i;
+			}
+			if (daysBeforeExpiryArray[i-1].getHighest() < upperValue)
+			{
+				upperValue = daysBeforeExpiryArray[i-1].getHighest(); // Find most interesting predictions
+				numOfDaysBeforeExpiry=i;
+				System.out.println("highest="+upperValue);
+			}
+			
+			//daysBeforeExpiryArray[i-1].displayAll();
+		}
+		
+		if (numOfDaysBeforeExpiry > 0)
+			StatsCollector.displayProbabilities(numOfDaysBeforeExpiry);
+		
+
     }
     
     public static void findMostSpreadOutDays()
@@ -977,6 +1027,7 @@ public class StatsCollector {
     	
 		maxNumberOfDaysBeforeExpiry= 300;
 		sampleSize = 0;
+		// Array which is used to calculate probability where the price will be a number of days from today
 		daysBeforeExpiryArray = new StatsPerDay[maxNumberOfDaysBeforeExpiry];
 		for (int i = 1; i <= maxNumberOfDaysBeforeExpiry ; i++)
 		{
@@ -1022,7 +1073,7 @@ public class StatsCollector {
     	for (int i=0; i < characteristics.length; i++)
     	{
     		characteristics[i].markDays();
-    		System.out.println("Total days found after " + i + " " + sampleSize);
+    		System.out.println("Checked criterion " + i + " Total days found " + sampleSize);
     	}
     	System.out.println("Total days found= " + sampleSize);
     }
@@ -1034,7 +1085,7 @@ public class StatsCollector {
     	for (int i=0; i < priceAction.length; i++)
     	{
     		priceAction[i].markDays();
-    		System.out.println("Total days found after " + i + " " + sampleSize);
+    		System.out.println("Checked criterion " + i + " Total days found " + sampleSize);
     	}
     	System.out.println("Total days found= " + sampleSize);
     }
@@ -1046,6 +1097,9 @@ public class StatsCollector {
 			//System.out.println("Marking days for " + History.days.get(lastDay-1).getMarketPhase() + " phase");
 		for (int i = 0; i < History.days.size() -1; i++)
 		{
+			if ( daysSelection[i] == -1)
+				continue;
+			
 			if (i < lastDay - 1)
             {
 				// Mark days which belong to similar phase of the market, i.e. bull, bear, trendless
@@ -1150,7 +1204,6 @@ public class StatsCollector {
     		{
     			if (i < lastDay - 1 && daysSelection[i] != -1 && i > 10)
     			{
-    				// Mark days which are above long term MA
     				if (History.days.get(i).getClose() > History.days.get(i-1).getClose())
     				{
     					if (History.days.get(i-1).getClose() > History.days.get(i-2).getClose())

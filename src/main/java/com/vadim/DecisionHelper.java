@@ -19,8 +19,9 @@ public class DecisionHelper {
     	
         log.info("DecisionHelper");
         
-        // Move history into memory and add indicators that will be used to calculate probabilities
         History.init();
+        StatsCollector.initialise();
+        // Move history into memory and add indicators (like bull,ma50, etc) that will be used to calculate probabilities
     	History.readPriceHistory();
     	History.addIndicators();
     	
@@ -31,25 +32,16 @@ public class DecisionHelper {
     }
     
     public static void findDaysInFutureWhereMarketWillBe()
-    {
-		// Accumulate stats for a number of days before expiry
-		StatsCollector.init(); // Will mark all days in the past which look similar, e.g. above MA. These are days of interest
-        for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= StatsCollector.getMaxNumberOfDaysBeforeExpiry(); daysBeforeExpiry++)
-        {
-        	// Find probabilities from the past days that were marked earlier
-        	StatsCollector.updateStatsForToday(daysBeforeExpiry);
-        }
-        StatsCollector.findMostLikelyDays();
-        //StatsCollector.findMostSpreadOutDays();
-        
+    {     
         StatsCollector.findBestDescriptionOfToday();
-        
+		// Check prior history in order to display what the price is likely to be at expiry. The process is the same for a number of
+		// days before expiry, i.e. check what are the likely prices tomorrow or in 100 days.
         for ( int daysBeforeExpiry = 1; daysBeforeExpiry <= StatsCollector.getMaxNumberOfDaysBeforeExpiry(); daysBeforeExpiry++)
         {
         	// Find probabilities from the past days that were marked earlier
         	StatsCollector.updateStatsForToday(daysBeforeExpiry);
         }
-        StatsCollector.findMostLikelyDays();
+        StatsCollector.findExpiryWithLimitedUpside();
     	
     }
 
