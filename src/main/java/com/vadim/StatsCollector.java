@@ -1055,12 +1055,15 @@ public class StatsCollector {
 		daysSelection = new int[History.days.size()-1];
 		findNumberOfSimilarDays(characteristics);
 		
-		SharePriceAction[] priceAction = new SharePriceAction[2];
+		SharePriceAction[] priceAction = new SharePriceAction[3];
     	// Another characteristic of a day is the rise of 0.5% or more in one day
 		priceAction[0] = new HalfAPercentRise();
 		
     	// Another characteristic of a day is the rise of two days in a row
 		priceAction[1] = new RiseOfTwoDaysInARow();
+		
+    	// Another characteristic of a day is the rise of three days in a row
+		priceAction[2] = new RiseOfThreeDaysInARow();
 		
 		findNumberOfSimilarDays(priceAction);
 
@@ -1208,6 +1211,49 @@ public class StatsCollector {
     				{
     					if (History.days.get(i-1).getClose() > History.days.get(i-2).getClose())
     						daysSelection[i] = 1;
+    					else
+    					{
+    						daysSelection[i] = -1;
+    						sampleSize--;
+    					}
+    				}
+    				else
+    				{
+    					daysSelection[i] = -1;
+    					sampleSize--;
+    				}
+    			}
+    		}
+		}
+    }
+    
+    public static void markSimilarDaysWithRiseOfThreeDaysInARow(int lastDay)
+    {
+		//System.out.println("Last day= " + lastDay);
+		//if (lastDay > 0)
+			//System.out.println("Marking days above MA 50 ");
+    	if (History.days.get(lastDay-1).getClose() > History.days.get(lastDay-2).getClose() && 
+    		History.days.get(lastDay-2).getClose() > History.days.get(lastDay-3).getClose() &&
+    		History.days.get(lastDay-3).getClose() > History.days.get(lastDay-4).getClose())
+		{
+    		for (int i = 0; i < History.days.size() -1; i++)
+    		{
+    			if (i < lastDay - 1 && daysSelection[i] != -1 && i > 10)
+    			{
+    				if (History.days.get(i).getClose() > History.days.get(i-1).getClose())
+    				{
+    					if (History.days.get(i-1).getClose() > History.days.get(i-2).getClose())
+    					{
+    						if (History.days.get(i-2).getClose() > History.days.get(i-3).getClose())
+    						{
+    							daysSelection[i] = 1;
+    						}
+    						else
+    						{
+        						daysSelection[i] = -1;
+        						sampleSize--;
+    						}
+    					}
     					else
     					{
     						daysSelection[i] = -1;
