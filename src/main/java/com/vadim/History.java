@@ -63,7 +63,12 @@ public class History {
             	}
             	else
             	{
-            		System.out.println("date= " + line[0] );
+                    System.out.println("date= " + line[0] 
+                    		+ ", open= " + line[1] 
+                    		+" , high= " + line[2] 
+                    		+" , low= " + line[3]
+                    		+" , close= " + line[4]
+                    		+" , volume= " + line[5]);
             		System.out.println("Method returns : " + line[0].contains("Date"));
             		break;
             	}
@@ -74,8 +79,8 @@ public class History {
                 		+" , low= " + line[3]
                 		+" , close= " + line[4]
                 		+" , volume= " + line[5]);
-                	*/
-				
+                	
+				*/
             	if (line[1].contains("Open") || line[5].equals("0") || line[0].contains("Date"))
             	{
             		// System.out.println("Invalid field, date= " + line[0] );

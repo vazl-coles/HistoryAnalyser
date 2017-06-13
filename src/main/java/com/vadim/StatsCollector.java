@@ -1055,7 +1055,7 @@ public class StatsCollector {
 		daysSelection = new int[History.days.size()-1];
 		findNumberOfSimilarDays(characteristics);
 		
-		SharePriceAction[] priceAction = new SharePriceAction[3];
+		SharePriceAction[] priceAction = new SharePriceAction[4];
     	// Another characteristic of a day is the rise of 0.5% or more in one day
 		priceAction[0] = new HalfAPercentRise();
 		
@@ -1064,6 +1064,9 @@ public class StatsCollector {
 		
     	// Another characteristic of a day is the rise of three days in a row
 		priceAction[2] = new RiseOfThreeDaysInARow();
+		
+    	// Another characteristic of a day is the rise of three days in a row
+		priceAction[3] = new NumberOfDaysSinceMA50Cross();
 		
 		findNumberOfSimilarDays(priceAction);
 
@@ -1259,6 +1262,32 @@ public class StatsCollector {
     						daysSelection[i] = -1;
     						sampleSize--;
     					}
+    				}
+    				else
+    				{
+    					daysSelection[i] = -1;
+    					sampleSize--;
+    				}
+    			}
+    		}
+		}
+    }
+    
+    public static void markSimilarDaysWithNumberOfDaysSinceMA50Cross(int lastDay)
+    {
+		//System.out.println("Last day= " + lastDay);
+    	int numberOfDaysSinceMA50Cross=0;
+
+    	numberOfDaysSinceMA50Cross = History.days.get(lastDay-1).getNumberOfDaysSinceMA50Cross();
+    	if (numberOfDaysSinceMA50Cross > 10) 
+		{
+    		for (int i = 0; i < History.days.size() -1; i++)
+    		{
+    			if (i < lastDay - 1 && daysSelection[i] != -1 && i > 10)
+    			{
+    				if (History.days.get(i).getNumberOfDaysSinceMA50Cross() > numberOfDaysSinceMA50Cross)
+    				{
+    					daysSelection[i] = 1;
     				}
     				else
     				{
